@@ -189,14 +189,20 @@ const builders = {
   }
 };
 
-// ---------- one renderer per canvas ----------
+// ---------- one shared WebGL renderer for every icon ----------
+// Phones only allow a handful of WebGL contexts per page, so all icons are drawn
+// by a single renderer and copied into each icon's own 2D canvas.
+const DPR = Math.min(devicePixelRatio || 1, 2);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(DPR);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.setScissorTest(true);
+renderer.setClearColor(0x000000, 0);
+const envTex = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+
 const items = canvases.map(canvas => {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
   const scene = new THREE.Scene();
-  const pm = new THREE.PMREMGenerator(renderer);
-  scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environment = envTex;
 
   const key = new THREE.DirectionalLight(0xffffff, 3.2); key.position.set(-3, 4, 4); scene.add(key);
   const rim = new THREE.DirectionalLight(0xff9a30, 5); rim.position.set(4, -1.5, -3); scene.add(rim);
@@ -206,11 +212,13 @@ const items = canvases.map(canvas => {
   const group = builders[canvas.dataset.icon]();
   const holder = new THREE.Group(); holder.add(group); scene.add(holder);
   const camera = new THREE.PerspectiveCamera(24, 1, 0.1, 50);
-  const it = { canvas, renderer, scene, camera, holder, visible: false, phase: Math.random() * 6 };
+  const ctx = canvas.getContext('2d');
+  const it = { canvas, ctx, scene, camera, holder, w: 170, h: 130, visible: false, phase: Math.random() * 6 };
 
-  const fit = () => {
+  it.fit = () => {
     const w = canvas.clientWidth || 170, h = canvas.clientHeight || 130;
-    renderer.setSize(w, h, false);
+    it.w = w; it.h = h;
+    canvas.width = Math.round(w * DPR); canvas.height = Math.round(h * DPR);
     camera.aspect = w / h; camera.updateProjectionMatrix();
     const box = new THREE.Box3().setFromObject(holder), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
     const t = Math.tan(camera.fov * Math.PI / 360);
@@ -218,15 +226,17 @@ const items = canvases.map(canvas => {
     camera.position.set(c.x, c.y, c.z + dist);
     camera.lookAt(c);
   };
-  it.fit = fit;
   new IntersectionObserver(([e]) => { it.visible = e.isIntersecting; }).observe(canvas);
   return it;
 });
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const rotBase = { houses: -0.5, trophy: -0.4, chair: -0.45, star: -0.4, instagram: -0.25, pinterest: -0.25, vk: -0.25, youtube: -0.25 };
-function resizeAll() { items.forEach(i => { holderBase(i); i.fit(); }); }
 function holderBase(i) { i.holder.rotation.set(0.2, rotBase[i.canvas.dataset.icon] ?? -0.4, 0); }
+function resizeAll() {
+  items.forEach(i => { holderBase(i); i.fit(); });
+  renderer.setSize(Math.max(...items.map(i => i.w)), Math.max(...items.map(i => i.h)), false);
+}
 addEventListener('resize', resizeAll);
 resizeAll();
 // fit once the page has laid out
@@ -235,6 +245,7 @@ requestAnimationFrame(resizeAll);
 const clock = new THREE.Clock();
 function frame() {
   const t = clock.getElapsedTime();
+  const bufH = renderer.domElement.height;
   for (const i of items) {
     if (!i.visible) continue;
     if (!reduce) {
@@ -242,7 +253,13 @@ function frame() {
       i.holder.rotation.y = base + Math.sin(t * 0.7 + i.phase) * 0.22;
       i.holder.position.y = Math.sin(t * 0.9 + i.phase) * 0.02;
     }
-    i.renderer.render(i.scene, i.camera);
+    renderer.setViewport(0, 0, i.w, i.h);
+    renderer.setScissor(0, 0, i.w, i.h);
+    renderer.clear();
+    renderer.render(i.scene, i.camera);
+    const pw = Math.round(i.w * DPR), ph = Math.round(i.h * DPR);
+    i.ctx.clearRect(0, 0, i.canvas.width, i.canvas.height);
+    i.ctx.drawImage(renderer.domElement, 0, bufH - ph, pw, ph, 0, 0, i.canvas.width, i.canvas.height);
   }
   requestAnimationFrame(frame);
 }
