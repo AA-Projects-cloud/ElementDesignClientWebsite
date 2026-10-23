@@ -17,5 +17,5 @@ Then open http://localhost:8080
 
 ## Deploy on Vercel
 
-Import the repository in Vercel and deploy with the default settings:
+Import the repository in Vercel and deploy with the default settings (no `vercel.json` is needed):
 Framework preset **Other**, no build command, no output directory (the repository root is served as-is).
