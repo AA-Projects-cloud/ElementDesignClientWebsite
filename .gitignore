@@ -1,0 +1,6 @@
+.claude/
+logo-src.jpg
+node_modules/
+.vercel/
+.DS_Store
+Thumbs.db

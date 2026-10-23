@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Services — Element Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Barlow+Condensed:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="inner">
+<main><div id="app"></div></main>
+<script type="module" src="common.js"></script>
+<script type="module">
+import { hero, process, contact, boot } from './inner.js';
+import { SERVICES, SUBSERVICES } from './data.js';
+const slug = new URLSearchParams(location.search).get('s');
+const top = SERVICES.find(s => s.slug === slug);
+const sub = SUBSERVICES.find(s => s.slug === slug);
+if (!top && !sub) location.replace('services.html');
+else {
+  const parent = top || SERVICES.find(s => s.slug === sub.parent);
+  const title = top ? top.title : `${sub.name} by Element Design`;
+  const lead = top ? top.lead : sub.text;
+  const text = top ? top.text : parent.text;
+  document.title = (top ? top.name : sub.name) + ' — Element Design';
+  const kids = top && top.children ? top.children.map(k => SUBSERVICES.find(s => s.slug === k)) : [];
+  const siblings = sub ? SUBSERVICES.filter(s => s.parent === sub.parent && s !== sub) : [];
+  document.getElementById('app').innerHTML = `
+${hero({ title, sub: lead, img: parent.img, pos: 'center 40%', cta: 'Discover portfolio', ctaHref: 'portfolio.html', backHref: sub ? `service.html?s=${parent.slug}` : 'services.html', backLabel: sub ? parent.name : 'Services' })}
+<section class="blk"><div class="wrap two">
+  <div class="reveal">
+    <h2>FOR YOU WE ARE CREATING <em>A COMPLETE PROJECT</em></h2>
+    <p class="lead">${text}</p>
+    <a class="pill" href="#contact" style="margin-top:28px">Discuss your project</a>
+  </div>
+  <div class="img-r reveal d1" style="background-image:url('${parent.img}')"></div>
+</div></section>
+${kids.length ? `<section class="blk"><div class="wrap"><h2 class="reveal">TYPES OF <em>${top.name.toUpperCase()}</em></h2><div class="chips">${kids.map(k => `<a href="service.html?s=${k.slug}">${k.name}</a>`).join('')}</div></div></section>` : ''}
+${siblings.length ? `<section class="blk"><div class="wrap"><h2 class="reveal">MORE <em>${parent.name.toUpperCase()}</em></h2><div class="chips">${[`<a href="service.html?s=${parent.slug}">${parent.name}</a>`, ...siblings.map(k => `<a href="service.html?s=${k.slug}">${k.name}</a>`)].join('')}</div></div></section>` : ''}
+<section class="blk"><div class="wrap">
+  <h2 class="reveal">FROM THE PROJECT TO <em>THE SUCCESSFUL COMPLETION</em></h2>
+  <div class="f-cards">${parent.points.map((p, i) => `<div class="f-card reveal ${i ? 'd' + Math.min(i, 3) : ''}"><h3>${p[0]}</h3><p>${p[1]}</p></div>`).join('')}</div>
+</div></section>
+<section class="blk"><div class="wrap"><div class="cta-band reveal">
+  <h2>PARTNERING WITH ELEMENT DESIGN ® IS AN INVESTMENT IN <em>A LASTING COLLABORATION</em></h2>
+  <a class="pill" href="#contact">Contact a manager</a>
+</div></div></section>
+${process()}
+${contact()}`;
+  boot();
+}
+</script>
+</body>
+</html>

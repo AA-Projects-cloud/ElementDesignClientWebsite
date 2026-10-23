@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio — Element Design</title>
+<meta name="description" content="Selected architecture and interior projects by Element Design across India.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Barlow+Condensed:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="inner">
+<main><div id="app"></div></main>
+<script type="module" src="common.js"></script>
+<script type="module">
+import { hero, contact, boot } from './inner.js';
+import { PROJECTS, PORTFOLIO_CATS } from './data.js';
+const c = new URLSearchParams(location.search).get('c') || 'all';
+const cat = PORTFOLIO_CATS.find(x => x.slug === c) || PORTFOLIO_CATS[0];
+document.title = (cat.slug === 'all' ? 'Portfolio' : cat.name) + ' — Element Design';
+const list = PROJECTS.filter(p => cat.slug === 'all' || p.cat === cat.slug);
+document.getElementById('app').innerHTML = `
+${hero({ title: cat.slug === 'all' ? 'Portfolio' : cat.name, sub: 'Selected architecture and interior projects by Element Design across India. Each one is drawn around the people who live and work in it.', img: 'interiors.jpg', pos: 'center 50%', cta: 'Discuss your project' })}
+<section class="blk"><div class="wrap">
+  <div class="cats">${PORTFOLIO_CATS.map(x => `<a class="${x.slug === cat.slug ? 'on' : ''}" href="portfolio.html${x.slug === 'all' ? '' : '?c=' + x.slug}">${x.name}</a>`).join('')}</div>
+  <div class="b-grid">${list.map((p, i) => `<div class="b-card p-card reveal ${i % 2 ? 'd1' : ''}"><div class="b-img" style="background-image:url('${p.img}');background-position:${p.pos}"><div class="pills"><span>${PORTFOLIO_CATS.find(x => x.slug === p.cat).name}</span></div></div><div class="b-row"><h3>${p.title}</h3></div><div class="b-date">${p.meta}</div></div>`).join('')}</div>
+</div></section>
+${contact()}`;
+boot();
+</script>
+</body>
+</html>

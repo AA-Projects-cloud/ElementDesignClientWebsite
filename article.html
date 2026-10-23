@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog — Element Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Barlow+Condensed:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="inner">
+<main><div id="app"></div></main>
+<script type="module" src="common.js"></script>
+<script type="module">
+import { hero, contact, boot } from './inner.js';
+import { BLOG } from './data.js';
+const slug = new URLSearchParams(location.search).get('slug');
+const post = BLOG.find(b => b.slug === slug);
+if (!post) location.replace('blog.html');
+else {
+  document.title = post.title + ' — Element Design';
+  const body = post.body.map(b => {
+    if (b[0] === 'p') return `<p>${b[1]}</p>`;
+    if (b[0] === 'h2') return `<h2>${b[1]}</h2>`;
+    if (b[0] === 'quote') return `<blockquote>${b[1]}<cite>${b[2]}</cite></blockquote>`;
+    if (b[0] === 'img') return `<figure class="${b[3] || ''}"><img src="${b[1]}" alt="${b[2]}"></figure>`;
+    return '';
+  }).join('');
+  const others = BLOG.filter(b => b !== post);
+  document.getElementById('app').innerHTML = `
+${hero({ title: post.title, sub: post.lead, img: post.img, pos: post.heroPos, backHref: 'blog.html', backLabel: 'Blog' })}
+<section class="blk"><div class="wrap"><article class="art">
+  <div class="art-meta"><h3>/ ${post.theme}</h3><span>${post.read}</span></div>
+  <div class="art-date">Published: ${post.date}</div>
+  ${body}
+  <a class="src" href="${post.source}" target="_blank" rel="noopener noreferrer">View the original post on Instagram</a>
+</article>
+${others.length ? `<div class="more"><h2 class="reveal">MORE FROM <em>THE BLOG</em></h2><div class="b-grid">${others.map(b => `<a class="b-card reveal" href="article.html?slug=${b.slug}"><div class="b-img" style="background-image:url('${b.img}');background-position:${b.pos}"><div class="pills"><span>${b.read}</span><span>${b.theme}</span></div></div><div class="b-date">Published: ${b.date}</div><div class="b-row"><h3>${b.title}</h3><em>Read</em></div></a>`).join('')}</div></div>` : ''}
+</div></section>
+${contact('TURN YOUR DREAMS OF THE PERFECT HOME INTO REALITY <em>WITH ELEMENT DESIGN ®</em>')}`;
+  boot();
+}
+</script>
+</body>
+</html>

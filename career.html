@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Career — Element Design</title>
+<meta name="description" content="Careers at Element Design: join a studio that creates premium architecture and interiors.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Barlow+Condensed:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="inner">
+<main><div id="app"></div></main>
+<script type="module" src="common.js"></script>
+<script type="module">
+import { hero, contact, boot } from './inner.js';
+const card = (n, t, p, d = '') => `<div class="f-card reveal ${d}"><span class="no">${n}</span><h3>${t}</h3><p>${p}</p></div>`;
+document.getElementById('app').innerHTML = `
+${hero({ title: 'Career at Element Design', sub: 'Creating space for growth and development', img: 'meeting.jpg', pos: 'center 40%', cta: 'View vacancies', ctaHref: '#join' })}
+
+<section class="blk"><div class="wrap">
+  <div class="two">
+    <div class="reveal">
+      <h2><em>/ ABOUT US</em></h2>
+      <h2 style="margin-top:-8px">ELEMENT DESIGN — YOUR PATH TO REALIZING YOUR TALENTS</h2>
+      <p class="lead">We are a studio specializing in premium architecture and interior design, based in Mumbai.</p>
+      <p class="lead">We work with creative initiators united by common values, whose ideas lead to outstanding results.</p>
+    </div>
+    <div class="f-cards c3" style="grid-template-columns:1fr;margin:0">
+      ${card('01', 'Architecture', 'Residences and buildings designed to be built', '')}
+      ${card('02', 'Design', 'Interiors drawn around the way people live', 'd1')}
+      ${card('03', 'Management', 'Projects delivered with clear schedules and reporting', 'd2')}
+    </div>
+  </div>
+</div></section>
+
+<section class="blk"><div class="wrap">
+  <h2 class="reveal"><em>/ TEAM AT ELEMENT DESIGN</em></h2>
+  <p class="lead reveal" style="font-size:clamp(22px,2.4vw,32px);line-height:1.25;font-weight:100;text-transform:uppercase;color:#e8e8e8;max-width:1100px">Element Design is built by architects, designers and engineers. We are proud of our team and do everything we can to provide opportunities for professional and career growth</p>
+</div></section>
+
+<section class="blk"><div class="wrap">
+  <h2 class="reveal"><em>/ CORPORATE CULTURE</em></h2>
+  <div class="f-cards c3">
+    ${card('', 'Work efficiently and relax effectively', 'We make time to step back together, because good ideas need room to breathe')}
+    ${card('', 'We care about every team member', 'A comfortable, well-equipped studio where people can recharge and do their best work', 'd1')}
+    ${card('', 'Continuously learning', 'Room for personal and professional growth: mentoring, training and learning from every project', 'd2')}
+  </div>
+</div></section>
+
+<section class="blk" id="join"><div class="wrap"><div class="cta-band reveal">
+  <h2>JOIN THE <em>ELEMENT DESIGN</em> TEAM</h2>
+  <p class="lead" style="max-width:520px">If you share the values of Element Design ® and want to become part of our team, send us your portfolio and a few lines about yourself through the form below.</p>
+  <a class="pill" href="#contact">Send your details</a>
+</div></div></section>
+
+<section class="blk"><div class="wrap">
+  <h2 class="reveal"><em>/ WORK AT ELEMENT DESIGN</em></h2>
+  <div class="f-cards">
+    ${card('№1', 'Reaching ambitious goals together', 'We work with people who share the studio’s values and support one another')}
+    ${card('№2', 'Team effort', 'Honest and respectful relationships are the only way to create something beautiful', 'd1')}
+    ${card('№3', 'Freedom of self-expression', 'Every person here is an individual, valued for talent and commitment', 'd2')}
+    ${card('№4', 'Cross-functional exchange', 'Close cooperation between departments helps us achieve the best results', 'd3')}
+  </div>
+</div></section>
+
+${contact('SEND US <em>YOUR DETAILS</em>')}`;
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog — Element Design</title>
+<meta name="description" content="News, press and insights from Element Design.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Barlow+Condensed:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="inner">
+<main><div id="app"></div></main>
+<script type="module" src="common.js"></script>
+<script type="module">
+import { hero, boot } from './inner.js';
+import { BLOG } from './data.js';
+const themes = ['All posts', ...new Set(BLOG.map(b => b.theme))];
+const cardHTML = (b, i) => `<a class="b-card reveal ${i % 2 ? 'd1' : ''}" href="article.html?slug=${b.slug}" data-theme="${b.theme}">
+  <div class="b-img" style="background-image:url('${b.img}');background-position:${b.pos}"><div class="pills"><span>${b.read}</span><span>${b.theme}</span></div></div>
+  <div class="b-date">Published: ${b.date}</div>
+  <div class="b-row"><h3>${b.title}</h3><em>Read</em></div></a>`;
+document.getElementById('app').innerHTML = `
+${hero({ title: 'Element Design ® blog', sub: 'News, press and insights from Element Design: our recognition, our thinking and the way we create unique spaces in our signature style.', img: 'drawings.jpg', pos: 'center 40%', backHref: 'index.html', backLabel: 'Home' })}
+<section class="blk"><div class="wrap">
+  <div class="filter" id="filter"><button type="button"><span><small>Theme</small><span id="fv">All posts</span></span><svg viewBox="0 0 14 8"><path d="M1 1l6 6 6-6"/></svg></button>
+    <ul>${themes.map((t, i) => `<li class="${i ? '' : 'on'}" data-t="${t}">${t}</li>`).join('')}</ul></div>
+  <div class="b-grid" id="grid">${BLOG.map(cardHTML).join('')}</div>
+</div></section>`;
+const f = document.getElementById('filter');
+f.querySelector('button').onclick = () => f.classList.toggle('open');
+document.addEventListener('click', e => { if (!f.contains(e.target)) f.classList.remove('open'); });
+f.querySelectorAll('li').forEach(li => li.onclick = () => {
+  f.querySelectorAll('li').forEach(x => x.classList.toggle('on', x === li));
+  document.getElementById('fv').textContent = li.dataset.t;
+  document.querySelectorAll('#grid .b-card').forEach(c => c.style.display = (li.dataset.t === 'All posts' || c.dataset.theme === li.dataset.t) ? '' : 'none');
+  f.classList.remove('open');
+});
+boot();
+</script>
+</body>
+</html>

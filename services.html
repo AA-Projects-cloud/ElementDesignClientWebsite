@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Services — Element Design</title>
+<meta name="description" content="Architecture, interiors, BIM engineering, supervision, construction management and procurement from Element Design.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Barlow+Condensed:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="inner">
+<main><div id="app"></div></main>
+<script type="module" src="common.js"></script>
+<script type="module">
+import { hero, process, contact, boot } from './inner.js';
+import { SERVICES } from './data.js';
+document.getElementById('app').innerHTML = `
+${hero({ title: 'Services', sub: 'From the first sketch to the final detail: architecture, interiors and everything needed to build them, handled by one team.', img: 'architecture.jpg', pos: 'center 35%', cta: 'Discuss your project' })}
+<section class="blk"><div class="wrap">
+  <h2 class="reveal">ELEMENT DESIGN ® — <em>YOUR LIFE-LONG PARTNER</em></h2>
+  <div class="sv-grid">${SERVICES.map((s, i) => `<a class="sv-card reveal ${i % 2 ? 'd1' : ''}" href="service.html?s=${s.slug}"><div class="b-img" style="background-image:url('${s.img}')"></div><div class="in"><h3>${s.name}</h3><p>${s.lead}</p></div></a>`).join('')}</div>
+</div></section>
+${process()}
+${contact()}`;
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About Us — Element Design</title>
+<meta name="description" content="Element Design is a studio for premium architectural and interior design, founded in 2017 by Yogesh Mewada and Nitish Tiwari.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Barlow+Condensed:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="inner">
+<main><div id="app"></div></main>
+<script type="module" src="common.js"></script>
+<script type="module">
+import { hero, process, contact, boot } from './inner.js';
+document.getElementById('app').innerHTML = `
+${hero({ title: 'About us', sub: '<em>Element Design ®</em> is a studio for premium architectural and interior design', img: 'interiors.jpg', pos: 'center', video: 'about-bg.mp4', cta: 'Discuss your project' })}
+
+<section class="blk"><div class="wrap two">
+  <div class="reveal">
+    <h2>ELEMENT DESIGN ® <em>STYLE</em></h2>
+    <p class="lead">Our projects are shaped by one belief: a space should be deeply understood before it is created. A style in which the harmony of form, colour and light turns a space into a work of art that stays relevant long after trends disappear.</p>
+    <div class="stat-big" style="margin-top:28px"><b>2017</b><span>the year The Element Designs was founded</span></div>
+  </div>
+  <div class="img-r reveal d1" style="background-image:url(interiors.jpg)"></div>
+</div></section>
+
+<section class="blk"><div class="wrap">
+  <h2 class="reveal">THE FOUNDERS OF <em>ELEMENT DESIGN ®</em></h2>
+  <div class="two">
+    <div>
+      <div class="people" style="grid-template-columns:1fr">
+        <div class="person reveal"><i>YM</i><div><h3>Yogesh Mewada</h3><p>Co-founder, The Element Designs. Brings an intuitive sense of proportion, material and emotion to every project.</p></div></div>
+        <div class="person reveal d1"><i>NT</i><div><h3>Nitish Tiwari</h3><p>Co-founder, The Element Designs. Combines an exacting eye for detail with a calm, considered way of working.</p></div></div>
+      </div>
+      <p class="lead reveal" style="margin-top:28px">“We don’t believe in creating statements, we believe in creating spaces that quietly stay relevant long after trends disappear.”</p>
+    </div>
+    <div class="img-r reveal d1" style="aspect-ratio:4/5;background-image:url(img/blog-toi-nominated.jpg);background-position:center 40%"></div>
+  </div>
+</div></section>
+
+<section class="blk"><div class="wrap">
+  <h2 class="reveal">THE STORY OF <em>ELEMENT DESIGN ®</em></h2>
+  <div class="tl">
+    <div class="tl-i reveal"><b>2017</b><p>The Element Designs is founded in Mumbai by Yogesh Mewada and Nitish Tiwari, with a focus on spaces that are deeply understood rather than merely decorated.</p></div>
+    <div class="tl-i reveal"><b>June 2026</b><p>Featured among India’s Top 25 Interior Designers in Bombay FilmFame Magazine. <a href="article.html?slug=india-top-25-interior-designers">Read the story</a></p></div>
+    <div class="tl-i reveal"><b>October 2026</b><p>Nominated for the Times of India Home &amp; Decor Awards 2026. <a href="article.html?slug=times-of-india-home-and-decor-awards-2026">Read the story</a></p></div>
+  </div>
+</div></section>
+
+<section class="blk"><div class="wrap">
+  <h2 class="reveal">SPECIAL CONDITIONS <em>FOR YOUR PROJECT</em></h2>
+  <div class="f-cards">
+    <div class="f-card reveal"><h3>Support after project completion</h3><p>Our team stays with you after the project is delivered</p></div>
+    <div class="f-card reveal d1"><h3>Familiar premium service</h3><p>Maintain your usual lifestyle while we make your vision real</p></div>
+    <div class="f-card reveal d2"><h3>Personal design expert</h3><p>Your trusted advisor within Element Design ®</p></div>
+    <div class="f-card reveal d3"><h3>Special attention</h3><p>An enhanced level of service for high-profile clients</p></div>
+    <div class="f-card reveal"><h3>Pricing framework</h3><p>Comfortable, clear conditions for your project</p></div>
+    <div class="f-card reveal d1"><h3>Roadmap</h3><p>A clear project management system with checkpoints for your approval</p></div>
+    <div class="f-card reveal d2"><h3>Reporting system</h3><p>Monitor the construction process online</p></div>
+    <div class="f-card reveal d3"><h3>Transparency</h3><p>Detailed schedules for your project</p></div>
+  </div>
+</div></section>
+
+<section class="blk"><div class="wrap">
+  <h2 class="reveal">IN THE <em>PRESS</em></h2>
+  <div class="b-grid">
+    <a class="b-card reveal" href="article.html?slug=india-top-25-interior-designers"><div class="b-img" style="background-image:url(img/blog-top25-thumb.jpg);background-position:center"><div class="pills"><span>Press</span></div></div><div class="b-date">Published: 07/06/2026</div><div class="b-row"><h3>India’s Top 25 Interior Designers: The Language of Elements</h3><em>Read</em></div></a>
+    <a class="b-card reveal d1" href="article.html?slug=times-of-india-home-and-decor-awards-2026"><div class="b-img" style="background-image:url(img/blog-toi-nominated.jpg);background-position:center 30%"><div class="pills"><span>Awards</span></div></div><div class="b-date">Published: 01/10/2026</div><div class="b-row"><h3>Nominated for the Times of India Home &amp; Decor Awards 2026</h3><em>Read</em></div></a>
+  </div>
+</div></section>
+
+<section class="blk"><div class="wrap"><div class="cta-band reveal">
+  <h2>OUR MISSION IS TO BECOME <em>YOUR RELIABLE LIFE-LONG PARTNER</em></h2>
+  <a class="pill" href="#contact">Contact our manager</a>
+</div></div></section>
+
+${process()}
+${contact()}`;
+boot();
+</script>
+</body>
+</html>
