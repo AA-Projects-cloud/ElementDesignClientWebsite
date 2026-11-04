@@ -205,21 +205,62 @@
 
   /* ------------------------------------------------------------- home only */
   // soft cloud texture drawn on a canvas (no external image needed)
-  function cloudTexture(seed) {
+  function cloudTexture(seed, n = 54, boost = 0) {
     const w = 1600, h = 900, c = document.createElement('canvas'); c.width = w; c.height = h;
     const x = c.getContext('2d');
     let s = seed; const rnd = () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
-    for (let i = 0; i < 54; i++) {
+    for (let i = 0; i < n; i++) {
       const cx = rnd() * w, cy = h * (.3 + rnd() * .65), rx = 140 + rnd() * 340, ry = 40 + rnd() * 120;
       const g = x.createRadialGradient(0, 0, 0, 0, 0, rx);
       g.addColorStop(0, 'rgba(255,252,245,1)'); g.addColorStop(.55, 'rgba(255,252,245,.45)'); g.addColorStop(1, 'rgba(255,252,245,0)');
-      x.save(); x.globalAlpha = .12 + rnd() * .3; x.translate(cx, cy); x.scale(1, ry / rx); x.fillStyle = g;
+      x.save(); x.globalAlpha = Math.min(1, .12 + boost + rnd() * .3); x.translate(cx, cy); x.scale(1, ry / rx); x.fillStyle = g;
       x.beginPath(); x.arc(0, 0, rx, 0, Math.PI * 2); x.fill(); x.restore();
     }
     return c.toDataURL('image/png');
   }
 
+  // soft smoke: translucent wisps at the top that thicken into a solid body at the bottom (fractal noise, drawn once)
+  function smokeTexture(seed, w, h, lo, hi, base, shade) {
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const x = c.getContext('2d'), img = x.createImageData(w, h), d = img.data;
+    const hash = (ix, iy) => { let n = Math.imul(ix, 374761393) ^ Math.imul(iy, 668265263) ^ Math.imul(seed, 1442695041); n = Math.imul(n ^ (n >>> 13), 1274126177); return ((n ^ (n >>> 16)) >>> 0) / 4294967295; };
+    const sm = t => t * t * (3 - 2 * t);
+    const vnoise = (px, py) => {
+      const ix = Math.floor(px), iy = Math.floor(py), fx = sm(px - ix), fy = sm(py - iy);
+      const a = hash(ix, iy), b = hash(ix + 1, iy), c2 = hash(ix, iy + 1), e = hash(ix + 1, iy + 1);
+      return a + (b - a) * fx + (c2 - a) * fy + (a - b - c2 + e) * fx * fy;
+    };
+    const fbm = (px, py) => { let v = 0, amp = .5, f = 1; for (let o = 0; o < 5; o++) { v += amp * vnoise(px * f, py * f); f *= 2; amp *= .5; } return v; };
+    const step = (e0, e1, v) => { const t = Math.min(1, Math.max(0, (v - e0) / (e1 - e0))); return sm(t); };
+    for (let j = 0; j < h; j++) {
+      const v = j / h;
+      for (let i = 0; i < w; i++) {
+        const u = i / w, n = fbm(u * 4, v * 7), n2 = fbm(u * 8 + 11, v * 13 + 5);
+        const ramp = step(lo, hi, v + (n - .5) * .5);                          // opacity: 0 at the top, 1 at the bottom
+        const sh = (1 - ramp) * Math.min(1, Math.max(0, (n2 - .3) * 2)) * .6;  // grey-beige shading inside the wisps
+        const k = (j * w + i) * 4;
+        d[k] = base[0] + (shade[0] - base[0]) * sh; d[k + 1] = base[1] + (shade[1] - base[1]) * sh; d[k + 2] = base[2] + (shade[2] - base[2]) * sh;
+        d[k + 3] = ramp * 255;
+      }
+    }
+    x.putImageData(img, 0, 0);
+    return c.toDataURL('image/png');
+  }
+
   function setupHome() {
+    // hero → page: two layers of beige smoke fade in and rise a little as the cream page rolls up
+    const hcs = $$('.hc'), hcw = $('.hero-clouds');
+    if (hcw) {
+      const CREAM = [237, 230, 214], GREY = [176, 168, 154];
+      hcs[0].style.backgroundImage = `url(${smokeTexture(31, 720, 275, .12, .8, CREAM, GREY)})`;   // short layer
+      hcs[1].style.backgroundImage = `url(${smokeTexture(77, 720, 450, .1, .62, CREAM, GREY)})`;    // tall layer, solid at its foot
+      gsap.set(hcs[0], { opacity: 0, y: () => innerHeight * .075 });
+      gsap.set(hcs[1], { opacity: 0, y: () => innerHeight * .06 });
+      const tl = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.flow', start: 'top bottom', end: 'top 45%', scrub: .6, invalidateOnRefresh: true } });
+      tl.to(hcs[0], { opacity: 1, duration: .4 }, 0).to(hcs[0], { y: () => -innerHeight * .075, duration: 1 }, 0)
+        .to(hcs[1], { opacity: 1, duration: .3 }, 0).to(hcs[1], { y: () => -innerHeight * .18, duration: 1 }, 0);
+    }
+
     // scattered projects: emerge from fog, then drift at different speeds
     $$('.sc-img').forEach(el => {
       const sp = +el.dataset.sp || .1;
