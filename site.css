@@ -621,3 +621,26 @@ html:not(.motion) .across { height: 100svh; }
 .across-stage::after { display: none; }
 .across-frame::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(ellipse at 50% 55%, transparent 25%, rgba(10, 10, 10, .72) 100%), linear-gradient(to top, rgba(10, 10, 10, .7), transparent 50%); }
 .across-frame .photo { z-index: 1; }
+
+/* ======================================================================
+   3D residence: scroll-driven, taken apart layer by layer
+   ====================================================================== */
+.house { position: relative; height: 760vh; background: #0e2a5c; }
+.house-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; color: #fff; }
+.house-sky, .house-bp { position: absolute; inset: 0; }
+.house-sky { background: linear-gradient(to bottom, #6fa5e6 0%, #a9cdf2 48%, #e8f0f6 74%, #cfe0c4 100%); }
+.house-bp { opacity: 0; background: radial-gradient(120% 90% at 50% 18%, #2f6bc0 0%, #1b4f9c 38%, #0d2b63 100%); }
+.house-cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.house-ui { position: absolute; inset: 0; pointer-events: none; padding: 0 var(--pad); }
+.hu-text { position: absolute; left: var(--pad); bottom: clamp(64px, 11vh, 110px); }
+.hu-text small { display: block; font: 500 11px/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase; opacity: .75; margin-bottom: 10px; }
+.hu-text h2 { font: 500 clamp(40px, 6.4vw, 104px)/.95 var(--sans); letter-spacing: -.035em; }
+.hu-num { position: absolute; right: var(--pad); bottom: clamp(64px, 11vh, 110px); font: 400 clamp(40px, 6vw, 96px)/.95 var(--sans); letter-spacing: -.04em; }
+.hu-dots { position: absolute; right: var(--pad); top: 50%; transform: translateY(-50%); list-style: none; display: flex; flex-direction: column; gap: 12px; pointer-events: auto; }
+.hu-dots li { width: 7px; height: 7px; border-radius: 50%; background: rgba(255, 255, 255, .35); cursor: pointer; transition: background .4s, transform .4s var(--ease); }
+.hu-dots li.on { background: #fff; transform: scale(1.5); }
+.hu-bar { position: absolute; left: var(--pad); right: var(--pad); bottom: 26px; display: flex; justify-content: space-between; font: 500 10px/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; opacity: .95; }
+.hu-bar i { position: absolute; left: 0; right: 0; top: -14px; height: 1px; background: rgba(255, 255, 255, .3); }
+.hu-bar i::after { content: ""; position: absolute; left: 0; top: 0; height: 1px; width: 100%; background: #fff; transform-origin: left; transform: scaleX(var(--p, 0)); }
+@media (max-width: 700px) { .hu-dots { display: none; } .house { height: 640vh; } }
+html:not(.motion) .house { display: none; }

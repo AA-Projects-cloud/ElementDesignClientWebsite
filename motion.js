@@ -146,7 +146,7 @@
     const handled = new Set();
 
     // headings: characters roll up out of a mask, line by line
-    $$('h2', main).filter(e => !inHero(e) && !e.closest('.modal, .statement')).forEach(h => textIn(h, { mode: 'chars', dur: 1.15, start: 'top 90%' }));
+    $$('h2', main).filter(e => !inHero(e) && !e.closest('.modal, .statement, .house')).forEach(h => textIn(h, { mode: 'chars', dur: 1.15, start: 'top 90%' }));
     // paragraphs: words, line by line
     $$('.lead, .across-copy p, .dc-copy p, .steps-head p, .statement-rule p, .contact .muted, .foot-big + p', main)
       .filter(e => !inHero(e) && !e._split && !e.closest('.modal')).forEach(p => textIn(p, { dur: 1.1, start: 'top 92%' }));
@@ -295,6 +295,46 @@
       tl.to(track, { xPercent: -38, ease: 'none', duration: 1 }, 0)
         .to(card, { width: '100vw', height: '100svh', borderRadius: 0, ease: 'power2.inOut', duration: .55 }, .18)
         .to(img, { scale: 1.02, filter: CLEAR, ease: 'none', duration: .75 }, .18);
+    }
+
+    // 3D residence: scroll scrubs through seven views while the model is taken apart layer by layer
+    const house = $('.house');
+    if (house) {
+      const cv = $('#houseCv'), scene = window.createHouse ? window.createHouse(cv) : null;
+      if (!scene) house.remove();
+      else {
+        const STEP = [['Full View', 'Exterior of an Element Design residence'], ['Foundation', 'Groundwork & footings'], ['Structure', 'Columns, beams & frame'], ['Floors', 'Slabs & levels'], ['Walls', 'Envelope & partitions'], ['Stairs', 'Vertical circulation'], ['Windows & Doors', 'Openings & glazing']];
+        const sub = $('#huSub'), title = $('#huTitle'), num = $('#huNum'), dots = $('#huDots'), bar = $('.hu-bar', house), cnt = $('#huCount'), bp = $('.house-bp', house);
+        STEP.forEach((_, i) => { const li = document.createElement('li'); li.addEventListener('click', () => lenis.scrollTo(house.getBoundingClientRect().top + scrollY + (house.offsetHeight - innerHeight) * (i + .12) / 7.2, { duration: 1.6 })); dots.appendChild(li); });
+        const lis = $$('li', dots);
+        let shown = -1, active = false, prog = 0;
+        const label = i => {
+          if (i === shown) return; shown = i;
+          lis.forEach((l, k) => l.classList.toggle('on', k === i));
+          num.textContent = '0' + (i + 1); cnt.textContent = '0' + (i + 1) + ' / 07';
+          title.textContent = STEP[i][0]; sub.textContent = STEP[i][1];
+          gsap.fromTo([title, sub, num], { yPercent: 35, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .9, ease: EXPO, stagger: .06, overwrite: 'auto' });
+        };
+        label(0);
+        const fit = () => scene.resize();
+        addEventListener('resize', fit); fit();
+        ST.create({
+          trigger: house, start: 'top bottom', end: 'bottom top',
+          onToggle: s => { active = s.isActive; if (active) fit(); }
+        });
+        ST.create({
+          trigger: house, start: 'top top', end: 'bottom bottom',
+          onUpdate: s => {
+            prog = Math.min(6, s.progress * 7.2 - .1);                         // short hold on the first and last view
+            prog = Math.max(0, prog);
+            label(Math.min(6, Math.round(prog)));
+            gsap.set(bp, { opacity: Math.min(1, prog * 1.4) });
+            bar.style.setProperty('--p', Math.min(1, prog / 6).toFixed(3));
+            scene.setProgress(prog);
+          }
+        });
+        gsap.ticker.add(() => { if (active) scene.render(); });
+      }
     }
 
     // pinned service step-through
