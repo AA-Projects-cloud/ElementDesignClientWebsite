@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Element Design — Premium Architecture & Interior Design</title>
 <meta name="description" content="Element Design is an international bureau for premium architectural and interior design.">
@@ -9,11 +10,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Barlow+Condensed:wght@300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="motion.css">
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
 </script>
 </head>
 <body>
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="pl-inner">
+    <div class="pl-top"><img class="pl-logo" src="logo.png" alt=""><div class="pl-name">ELEMENT DESIGN<sup>®</sup></div></div>
+    <div class="pl-row"><div class="pl-bar"><i></i></div><b class="pl-count">0%</b></div>
+  </div>
+</div>
+<noscript><style>.preloader{display:none}html .reveal{opacity:1;transform:none}</style></noscript>
+
 
 <header class="nav" id="nav">
   <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -108,6 +118,10 @@
       <div class="style-img reveal d1"></div>
     </section>
 
+
+    <!-- BRAND MARQUEE -->
+    <section class="mq-band" aria-hidden="true"><div class="mq-track"><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span></div></section>
+
     <!-- RECOGNITION -->
     <section class="recog" id="recognition">
       <video class="recog-bg" src="recognition.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
@@ -171,8 +185,12 @@
 
 <div class="cookie" id="cookie">This website uses Cookies. <button id="accept">Accept</button></div>
 
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script type="module" src="icons.js"></script>
 <script type="module" src="main.js"></script>
 <script type="module" src="common.js"></script>
+<script type="module" src="motion.js"></script>
 </body>
 </html>
