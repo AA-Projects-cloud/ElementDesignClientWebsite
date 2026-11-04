@@ -32,6 +32,8 @@
       </div>
     </div>
     <div class="hero-caps"><span>Architecture</span><span>Interiors</span><span>Commercial</span><span>Element Design ®</span></div>
+    <p class="hero-tag">An exceptional service experience tailored to discerning clients</p>
+    <div class="hero-mist" aria-hidden="true"></div>
   </section>
 
   <div class="flow">
@@ -47,30 +49,6 @@
       <div class="sc-img sc-7" data-sp="0.12" style="background-image:url(construction.jpg)"></div>
     </section>
 
-    <!-- PORTFOLIO: full-frame slider -->
-    <section class="reel" id="portfolio">
-      <div class="reel-frame">
-        <span class="reel-title">Portfolio</span>
-        <span class="reel-count"><b id="reelNum">01</b> / 03</span>
-        <article class="reel-slide on" data-label="Architecture">
-          <div class="bg" style="background-image:url(architecture.jpg);background-position:center 35%"></div>
-          <div class="reel-copy"><span class="label">More than <em>650</em> completed projects</span><h2>Architecture</h2><a class="ulink" href="portfolio.html?c=architectural-design">Architectural design <span>→</span></a></div>
-        </article>
-        <article class="reel-slide" data-label="Interiors">
-          <div class="bg" style="background-image:url(interiors.jpg)"></div>
-          <div class="reel-copy"><span class="label">More than <em>650</em> completed projects</span><h2>Interiors</h2><a class="ulink" href="portfolio.html?c=residential-interiors">Interior design <span>→</span></a></div>
-        </article>
-        <article class="reel-slide" data-label="Commercial">
-          <div class="bg" style="background-image:url(commercial.jpg);background-position:center 55%"></div>
-          <div class="reel-copy"><span class="label">More than <em>650</em> completed projects</span><h2>Commercial</h2><a class="ulink" href="portfolio.html?c=commercial-interiors">Commercial interiors <span>→</span></a></div>
-        </article>
-        <div class="reel-arrows">
-          <button class="circle-btn" id="reelPrev" type="button" aria-label="Previous"><svg viewBox="0 0 14 14"><path d="M12 7H2M6 3L2 7l4 4"/></svg></button>
-          <button class="circle-btn" id="reelNext" type="button" aria-label="Next"><svg viewBox="0 0 14 14"><path d="M2 7h10M8 3l4 4-4 4"/></svg></button>
-        </div>
-      </div>
-    </section>
-
     <!-- STATEMENT -->
     <section class="statement" id="about">
       <span class="label">About</span>
@@ -81,15 +59,25 @@
       </div>
     </section>
 
+    <!-- MARQUEE: the photo opens from a small card to the full screen -->
+    <section class="mq" id="mq" aria-label="Element Design">
+      <div class="mq-stage">
+        <div class="mq-text" aria-hidden="true"><div class="mq-track">
+          <span>ELEMENT DESIGN</span><span>ELEMENT DESIGN</span><span>ELEMENT DESIGN</span><span>ELEMENT DESIGN</span><span>ELEMENT DESIGN</span><span>ELEMENT DESIGN</span>
+        </div></div>
+        <div class="mq-card"><div class="mq-img" style="background-image:url(architecture.jpg);background-position:center 35%"></div></div>
+      </div>
+    </section>
+
     <!-- SERVICE POINTS: pinned step-through -->
     <section class="steps" id="service">
       <div class="steps-bg">
-        <div class="bg on" style="background-image:url(interiors.jpg)"></div>
+        <div class="bg on" style="background-image:url(architecture.jpg);background-position:center 35%"></div>
         <div class="bg" style="background-image:url(meeting.jpg)"></div>
         <div class="bg" style="background-image:url(drawings.jpg)"></div>
         <div class="bg" style="background-image:url(schedule.jpg)"></div>
         <div class="bg" style="background-image:url(construction.jpg)"></div>
-        <div class="bg" style="background-image:url(architecture.jpg);background-position:center 35%"></div>
+        <div class="bg" style="background-image:url(interiors.jpg)"></div>
       </div>
       <div class="steps-head">
         <h2><em>Element Design ®</em> – your life-long partner</h2>
@@ -137,35 +125,63 @@
       </section>
     </div>
 
-    <!-- ACROSS INDIA -->
+    <!-- PORTFOLIO: stacking cards -->
+    <section class="stack" id="portfolio">
+      <div class="stack-head"><span class="label">Portfolio</span><h2>More than <em>650</em> completed projects</h2></div>
+      <div class="stack-list">
+        <article class="st-card" style="--i:0">
+          <div class="st-copy"><span class="label">01 / 03</span><h3>Architecture</h3><a class="ulink" href="portfolio.html?c=architectural-design">Architectural design <span>→</span></a></div>
+          <a class="st-img" href="portfolio.html?c=architectural-design" aria-label="Architectural design" style="background-image:url(architecture.jpg);background-position:center 35%"></a>
+        </article>
+        <article class="st-card alt" style="--i:1">
+          <div class="st-copy"><span class="label">02 / 03</span><h3>Interiors</h3><a class="ulink" href="portfolio.html?c=residential-interiors">Interior design <span>→</span></a></div>
+          <a class="st-img" href="portfolio.html?c=residential-interiors" aria-label="Interior design" style="background-image:url(interiors.jpg)"></a>
+        </article>
+        <article class="st-card" style="--i:2">
+          <div class="st-copy"><span class="label">03 / 03</span><h3>Commercial</h3><a class="ulink" href="portfolio.html?c=commercial-interiors">Commercial interiors <span>→</span></a></div>
+          <a class="st-img" href="portfolio.html?c=commercial-interiors" aria-label="Commercial interiors" style="background-image:url(commercial.jpg);background-position:center 55%"></a>
+        </article>
+      </div>
+    </section>
+
+    <!-- FOG: clients -->
+    <section class="fogsec" id="clients">
+      <div class="fog-wash" aria-hidden="true"></div>
+      <div class="fog-clouds" aria-hidden="true"><div class="cloud cl1"></div><div class="cloud cl2"></div></div>
+      <div class="fog-sticky">
+        <div class="fog-copy">
+          <span class="label">Clients</span>
+          <h2>We are chosen by those <em>who strive for excellence</em> — among our clients:</h2>
+          <div class="marquee"><div class="track">
+            <span>Mandarin Oriental</span><span>Four Seasons</span><span>Aman</span><span>Rosewood</span><span>Bulgari Hotels</span><span>Six Senses</span>
+            <span>Mandarin Oriental</span><span>Four Seasons</span><span>Aman</span><span>Rosewood</span><span>Bulgari Hotels</span><span>Six Senses</span>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACROSS INDIA: the photo opens like a letterbox -->
     <section class="across" id="across">
       <div class="across-stage">
-        <div class="photo">
-          <img src="india-night.jpg" alt="India at night">
-          <svg viewBox="0 0 736 1308" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <path class="net" d="M295 522 L170 646 L322 690 L315 780 L362 900 L568 658 Z"/>
-            <g class="pin" style="--i:0"><circle class="rip" cx="295" cy="522" r="6"/><circle class="dot" cx="295" cy="522" r="4"/><text x="312" y="516">Delhi</text></g>
-            <g class="pin" style="--i:1"><circle class="rip" cx="170" cy="646" r="6"/><circle class="dot" cx="170" cy="646" r="4"/><text x="187" y="640">Mumbai</text></g>
-            <g class="pin" style="--i:2"><circle class="rip" cx="322" cy="690" r="6"/><circle class="dot" cx="322" cy="690" r="4"/><text x="339" y="684">Hyderabad</text></g>
-            <g class="pin" style="--i:3"><circle class="rip" cx="315" cy="780" r="6"/><circle class="dot" cx="315" cy="780" r="4"/><text x="332" y="774">Bangalore</text></g>
-            <g class="pin" style="--i:4"><circle class="rip" cx="362" cy="900" r="6"/><circle class="dot" cx="362" cy="900" r="4"/><text x="379" y="894">Chennai</text></g>
-            <g class="pin" style="--i:5"><circle class="rip" cx="568" cy="658" r="6"/><circle class="dot" cx="568" cy="658" r="4"/><text x="585" y="652">Kolkata</text></g>
-          </svg>
+        <div class="across-frame">
+          <div class="photo">
+            <img src="india-night.jpg" alt="India at night">
+            <svg viewBox="0 0 736 1308" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <path class="net" d="M295 522 L170 646 L322 690 L315 780 L362 900 L568 658 Z"/>
+              <g class="pin" style="--i:0"><circle class="rip" cx="295" cy="522" r="6"/><circle class="dot" cx="295" cy="522" r="4"/><text x="312" y="516">Delhi</text></g>
+              <g class="pin" style="--i:1"><circle class="rip" cx="170" cy="646" r="6"/><circle class="dot" cx="170" cy="646" r="4"/><text x="187" y="640">Mumbai</text></g>
+              <g class="pin" style="--i:2"><circle class="rip" cx="322" cy="690" r="6"/><circle class="dot" cx="322" cy="690" r="4"/><text x="339" y="684">Hyderabad</text></g>
+              <g class="pin" style="--i:3"><circle class="rip" cx="315" cy="780" r="6"/><circle class="dot" cx="315" cy="780" r="4"/><text x="332" y="774">Bangalore</text></g>
+              <g class="pin" style="--i:4"><circle class="rip" cx="362" cy="900" r="6"/><circle class="dot" cx="362" cy="900" r="4"/><text x="379" y="894">Chennai</text></g>
+              <g class="pin" style="--i:5"><circle class="rip" cx="568" cy="658" r="6"/><circle class="dot" cx="568" cy="658" r="4"/><text x="585" y="652">Kolkata</text></g>
+            </svg>
+          </div>
         </div>
         <div class="across-copy">
           <h2>Completed projects across India</h2>
           <div><p>We have showcasing projects in the distinctive Element Design ® style around the world the most extensive portfolio</p><a class="ulink" href="portfolio.html">Discover portfolio <span>→</span></a></div>
         </div>
       </div>
-    </section>
-
-    <!-- CLIENTS -->
-    <section class="clients">
-      <div class="clients-head"><span class="label">Clients</span><h2>We are chosen by those <em>who strive for excellence</em> — among our clients:</h2></div>
-      <div class="marquee"><div class="track">
-        <span>Mandarin Oriental</span><span>Four Seasons</span><span>Aman</span><span>Rosewood</span><span>Bulgari Hotels</span><span>Six Senses</span>
-        <span>Mandarin Oriental</span><span>Four Seasons</span><span>Aman</span><span>Rosewood</span><span>Bulgari Hotels</span><span>Six Senses</span>
-      </div></div>
     </section>
 
     <!-- PROCESS -->

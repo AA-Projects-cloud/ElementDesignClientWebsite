@@ -26,6 +26,9 @@
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const isHome = !!$('.hero');
   const inHero = e => e.closest('.hero, .inner-hero');
+  const HAZE = 'blur(18px) brightness(1.35) saturate(.55)';          // the "fog" an image emerges from
+  const CLEAR = 'blur(0px) brightness(1) saturate(1)';
+  const hazeIn = (el, { delay = 0, dur = 2.2 } = {}) => gsap.fromTo(el, { filter: HAZE }, { filter: CLEAR, duration: dur, delay, ease: 'power2.out', clearProps: 'filter' });
 
   /* ------------------------------------------------------------ smooth scroll */
   const lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true, touchMultiplier: 1.4 });
@@ -38,8 +41,7 @@
 
   Element.prototype.scrollIntoView = function () { lenis.scrollTo(this, { offset: -40, duration: 1.5 }); };
   const syncLock = () => {
-    const b = document.body.classList;
-    if (b.contains('lock') || b.contains('menu-open')) lenis.stop();
+    if (document.body.classList.contains('lock')) lenis.stop();
     else if (!loading) lenis.start();
   };
   new MutationObserver(syncLock).observe(document.body, { attributes: true, attributeFilter: ['class'] });
@@ -70,7 +72,16 @@
     el.setAttribute('aria-label', label); el.dataset.split = mode;
     return (el._split = { words, chars });
   }
-  const lineDelays = (words, perLine = .1, perWord = .02) => {
+  // per-character delay that restarts on every line, so each wrapped line rolls in on its own
+  const charDelays = (chars, perChar, perLine) => {
+    let line = -1, last = -1e9, k = 0;
+    return chars.map(c => {
+      const top = Math.round(c.getBoundingClientRect().top);
+      if (Math.abs(top - last) > 6) { line++; last = top; k = 0; }
+      return line * perLine + (k++) * perChar;
+    });
+  };
+  const wordDelays = (words, perLine = .1, perWord = .02) => {
     let line = -1, last = -1e9, k = 0;
     return words.map(w => {
       const top = Math.round(w.parentElement.getBoundingClientRect().top);
@@ -78,12 +89,13 @@
       return line * perLine + (k++) * perWord;
     });
   };
-  function textIn(el, { mode = 'words', dur = 1.15, start = 'top 88%', delay = 0, immediate = false, stagger = .03 } = {}) {
+  // headings: characters rise out of a mask line by line. paragraphs: words, line by line.
+  function textIn(el, { mode = 'words', dur = 1.15, start = 'top 88%', delay = 0, immediate = false } = {}) {
     const s = splitText(el, mode), items = mode === 'chars' ? s.chars : s.words;
     gsap.set(items, { yPercent: 118 });
     const play = () => {
-      const d = mode === 'chars' ? null : lineDelays(items);
-      gsap.to(items, { yPercent: 0, duration: dur, ease: EXPO, delay: mode === 'chars' ? delay : i => delay + d[i], stagger: mode === 'chars' ? stagger : 0 });
+      const d = mode === 'chars' ? charDelays(items, .018, .09) : wordDelays(items);
+      gsap.to(items, { yPercent: 0, duration: dur, ease: EXPO, delay: i => delay + d[i] });
     };
     if (!immediate) ST.create({ trigger: el, start, once: true, onEnter: play });
     return play;
@@ -103,20 +115,29 @@
     el.insertBefore(px, el.firstChild);
     return (el._px = px);
   }
+  // pointer zoom: the picture slowly pushes in under the cursor and settles back on leave
+  function hoverZoom(el) {
+    const px = el._px; if (!px || !fine || el._hz) return;
+    el._hz = true;
+    el.addEventListener('mouseenter', () => gsap.to(px, { scale: '+=0.09', duration: 1.4, ease: EXPO, overwrite: 'auto' }));
+    el.addEventListener('mouseleave', () => gsap.to(px, { scale: el._rest || 1.04, duration: 1.4, ease: EXPO, overwrite: 'auto' }));
+  }
   function imageMotion(el, { reveal = true, par = 7 } = {}) {
     const px = wrapBg(el); if (!px) return;
     if (reveal) {
       const r = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0;
       gsap.set(el, { clipPath: `inset(12% 9% 12% 9% round ${r}px)` });
-      gsap.set(px, { scale: 1.28 });
+      gsap.set(px, { scale: 1.3, filter: HAZE });
       ST.create({
         trigger: el, start: 'top 88%', once: true, onEnter: () => {
-          gsap.to(el, { clipPath: `inset(0% 0% 0% 0% round ${r}px)`, duration: 1.5, ease: 'expo.inOut', clearProps: 'clipPath' });
-          gsap.to(px, { scale: 1.04, duration: 1.9, ease: EXPO });
+          gsap.to(el, { clipPath: `inset(0% 0% 0% 0% round ${r}px)`, duration: 1.6, ease: 'expo.inOut', clearProps: 'clipPath' });
+          gsap.to(px, { scale: 1.04, filter: CLEAR, duration: 2.2, ease: EXPO, clearProps: 'filter' });
         }
       });
-    } else gsap.set(px, { scale: 1.1 });
+      el._rest = 1.04;
+    } else { gsap.set(px, { scale: 1.1 }); el._rest = 1.1; }
     gsap.fromTo(px, { yPercent: -par }, { yPercent: par, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
+    hoverZoom(el);
   }
 
   /* ----------------------------------------------------- generic (every page) */
@@ -124,10 +145,11 @@
     const main = $('main') || document.body;
     const handled = new Set();
 
-    // headings and paragraphs: masked reveals
-    $$('h2', main).filter(e => !inHero(e) && !e.closest('.modal, .reel-copy')).forEach(h => textIn(h, { dur: 1.2 }));
+    // headings: characters roll up out of a mask, line by line
+    $$('h2', main).filter(e => !inHero(e) && !e.closest('.modal, .statement')).forEach(h => textIn(h, { mode: 'chars', dur: 1.15, start: 'top 90%' }));
+    // paragraphs: words, line by line
     $$('.lead, .across-copy p, .dc-copy p, .steps-head p, .statement-rule p, .contact .muted, .foot-big + p', main)
-      .filter(e => !inHero(e) && !e._split && !e.closest('.modal')).forEach(p => textIn(p, { dur: 1.1, start: 'top 90%' }));
+      .filter(e => !inHero(e) && !e._split && !e.closest('.modal')).forEach(p => textIn(p, { dur: 1.1, start: 'top 92%' }));
 
     // groups: staggered rise
     const groups = [
@@ -150,7 +172,7 @@
       ST.batch(els, { start: 'top 92%', once: true, onEnter: b => gsap.to(b, { opacity: 1, x: 0, y: 0, duration: 1.15, ease: EXPO, stagger: .1, clearProps: 'transform,opacity' }) });
     });
 
-    // images: mask reveal + parallax
+    // images: fog-to-clear + mask reveal + parallax + hover zoom
     $$('.img-r, .contact-img, .b-img', main).filter(e => !inHero(e)).forEach(e => {
       if (e.classList.contains('b-img') && e.closest('.sv-card, .b-card')) imageMotion(e, { reveal: false, par: 6 });
       else imageMotion(e);
@@ -170,55 +192,69 @@
       ST.batch(art, { start: 'top 92%', once: true, onEnter: b => gsap.to(b, { opacity: 1, y: 0, duration: 1.1, ease: EXPO, stagger: .08, clearProps: 'transform,opacity' }) });
     }
     $$('.art figure img').forEach(img => {
-      gsap.set(img, { clipPath: 'inset(12% 8% 12% 8% round 18px)', scale: 1.1 });
-      ST.create({ trigger: img, start: 'top 88%', once: true, onEnter: () => gsap.to(img, { clipPath: 'inset(0% 0% 0% 0% round 18px)', scale: 1, duration: 1.5, ease: 'expo.inOut', clearProps: 'clipPath,transform' }) });
+      gsap.set(img, { clipPath: 'inset(12% 8% 12% 8% round 18px)', scale: 1.1, filter: HAZE });
+      ST.create({ trigger: img, start: 'top 88%', once: true, onEnter: () => gsap.to(img, { clipPath: 'inset(0% 0% 0% 0% round 18px)', scale: 1, filter: CLEAR, duration: 1.8, ease: 'expo.inOut', clearProps: 'clipPath,transform,filter' }) });
     });
 
     // cards that arrive: gentle scale
     $$('.cta-band, .contact, .darkcard, .foot-card', main).forEach(e => {
       gsap.fromTo(e, { scale: .94, y: 40 }, { scale: 1, y: 0, ease: 'none', scrollTrigger: { trigger: e, start: 'top 98%', end: 'top 55%', scrub: .6 } });
     });
-
-    // footer wordmark
-    const fb = $('.foot-big'); if (fb) textIn(fb, { mode: 'chars', stagger: .025, start: 'top 92%', dur: 1.3 });
+    const fb = $('.foot-big'); if (fb) textIn(fb, { mode: 'chars', start: 'top 92%', dur: 1.3 });
   }
 
   /* ------------------------------------------------------------- home only */
+  // soft cloud texture drawn on a canvas (no external image needed)
+  function cloudTexture(seed) {
+    const w = 1600, h = 900, c = document.createElement('canvas'); c.width = w; c.height = h;
+    const x = c.getContext('2d');
+    let s = seed; const rnd = () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+    for (let i = 0; i < 54; i++) {
+      const cx = rnd() * w, cy = h * (.3 + rnd() * .65), rx = 140 + rnd() * 340, ry = 40 + rnd() * 120;
+      const g = x.createRadialGradient(0, 0, 0, 0, 0, rx);
+      g.addColorStop(0, 'rgba(255,252,245,1)'); g.addColorStop(.55, 'rgba(255,252,245,.45)'); g.addColorStop(1, 'rgba(255,252,245,0)');
+      x.save(); x.globalAlpha = .12 + rnd() * .3; x.translate(cx, cy); x.scale(1, ry / rx); x.fillStyle = g;
+      x.beginPath(); x.arc(0, 0, rx, 0, Math.PI * 2); x.fill(); x.restore();
+    }
+    return c.toDataURL('image/png');
+  }
+
   function setupHome() {
-    // scattered projects drift at different speeds
+    // scattered projects: emerge from fog, then drift at different speeds
     $$('.sc-img').forEach(el => {
       const sp = +el.dataset.sp || .1;
-      gsap.set(el, { opacity: 0, scale: .84 });
-      ST.create({ trigger: el, start: 'top 98%', once: true, onEnter: () => gsap.to(el, { opacity: 1, scale: 1, duration: 1.5, ease: EXPO }) });
+      gsap.set(el, { opacity: 0, scale: .84, filter: HAZE });
+      ST.create({ trigger: el, start: 'top 98%', once: true, onEnter: () => {
+        gsap.to(el, { opacity: 1, scale: 1, duration: 1.5, ease: EXPO });
+        gsap.to(el, { filter: CLEAR, duration: 2.2, ease: 'power2.out', clearProps: 'filter' });
+      } });
       gsap.fromTo(el, { y: () => sp * innerHeight * 1.5 }, { y: () => -sp * innerHeight * 1.5, ease: 'none', scrollTrigger: { trigger: '.scatter', start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true } });
     });
 
-    // portfolio slider: frame grows into place, text rises on every change
-    const frame = $('.reel-frame');
-    if (frame) {
-      gsap.fromTo(frame, { scale: .9, borderRadius: 44 }, { scale: 1, borderRadius: 16, ease: 'none', scrollTrigger: { trigger: '.reel', start: 'top 92%', end: 'top 18%', scrub: .5 } });
-      const slides = $$('.reel-slide');
-      const parts = slides.map(s => ({ h: splitText($('h2', s)).words, rest: $$('.label, .ulink', s) }));
-      parts.forEach(p => { gsap.set(p.h, { yPercent: 118 }); gsap.set(p.rest, { opacity: 0, y: 18 }); });
-      const play = i => {
-        gsap.to(parts[i].h, { yPercent: 0, duration: 1.2, ease: EXPO, stagger: .06 });
-        gsap.to(parts[i].rest, { opacity: 1, y: 0, duration: .9, ease: EXPO, stagger: .1, delay: .25 });
-      };
-      ST.create({ trigger: '.reel', start: 'top 55%', once: true, onEnter: () => play(0) });
-      addEventListener('reel:change', e => {
-        const { from, to } = e.detail;
-        gsap.to(parts[from].h, { yPercent: -118, duration: .6, ease: 'expo.in' });
-        gsap.set(parts[to].h, { yPercent: 118 });
-        gsap.set(parts[to].rest, { opacity: 0, y: 18 });
-        play(to);
-      });
+    // statement: words light up as you read; the thumbnail opens up
+    const sh = $('.statement h2');
+    if (sh) {
+      const s = splitText(sh, 'words');
+      gsap.set(s.words, { opacity: .14 });
+      gsap.to(s.words, { opacity: 1, stagger: .12, ease: 'none', scrollTrigger: { trigger: sh, start: 'top 82%', end: 'bottom 48%', scrub: true } });
     }
-
-    // statement: the inline thumbnail opens up
     const thumb = $('.statement .thumb');
     if (thumb) { gsap.set(thumb, { scaleX: 0, transformOrigin: 'left center' }); ST.create({ trigger: thumb, start: 'top 88%', once: true, onEnter: () => gsap.to(thumb, { scaleX: 1, duration: 1.4, ease: 'expo.inOut', delay: .1 }) }); }
     const rule = $('.statement-rule');
     if (rule) { gsap.set(rule.children, { opacity: 0, y: 40 }); ST.create({ trigger: rule, start: 'top 90%', once: true, onEnter: () => gsap.to(rule.children, { opacity: 1, y: 0, duration: 1.1, ease: EXPO, stagger: .12, clearProps: 'transform,opacity' }) }); }
+
+    // marquee: the small photo card opens up to the full screen while the name slides past
+    const mq = $('.mq');
+    if (mq) {
+      const card = $('.mq-card'), img = $('.mq-img'), track = $('.mq-track');
+      gsap.set(card, { xPercent: -50, yPercent: -50 });
+      gsap.set(track, { xPercent: 4 });
+      gsap.set(img, { scale: 1.4, filter: HAZE });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: mq, start: 'top top', end: 'bottom bottom', scrub: .6 } });
+      tl.to(track, { xPercent: -38, ease: 'none', duration: 1 }, 0)
+        .to(card, { width: '100vw', height: '100svh', borderRadius: 0, ease: 'power2.inOut', duration: .55 }, .18)
+        .to(img, { scale: 1.02, filter: CLEAR, ease: 'none', duration: .75 }, .18);
+    }
 
     // pinned service step-through
     const steps = $('.steps');
@@ -234,40 +270,68 @@
         num.textContent = '0' + (idx + 1);
         gsap.fromTo($$('.label, h3, p, .step-more', items[idx]), { y: 36, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: EXPO, stagger: .07, overwrite: 'auto' });
         gsap.fromTo(num, { yPercent: 35, opacity: .2 }, { yPercent: 0, opacity: 1, duration: .8, ease: EXPO });
+        hazeIn(bgs[idx], { dur: 1.6 });
       };
       const dist = () => '+=' + Math.round(innerHeight * (N - 1) * .9);
       ST.create({
         trigger: steps, start: 'top top', end: dist, pin: true, scrub: true, anticipatePin: 1,
         onUpdate: self => { gsap.set(track, { scaleX: self.progress }); show(Math.min(N - 1, Math.floor(self.progress * N * .9999))); }
       });
-      gsap.fromTo(bgs, { scale: 1.12 }, { scale: 1.02, ease: 'none', scrollTrigger: { trigger: steps, start: 'top top', end: dist, scrub: true } });
+      gsap.fromTo(bgs, { scale: 1.14 }, { scale: 1.02, ease: 'none', scrollTrigger: { trigger: steps, start: 'top top', end: dist, scrub: true } });
     }
 
     // dark recognition card: video drifts inside
     const dv = $('.dc-media video');
     if (dv) gsap.fromTo(dv, { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '.darkcard', start: 'top bottom', end: 'bottom top', scrub: true } });
 
-    // India: slow push-in while the stage is pinned
-    const photo = $('.across .photo');
-    if (photo) {
-      gsap.set(photo, { xPercent: -50, scale: 1.05, transformOrigin: '50% 55%' });
-      gsap.to(photo, { scale: 1.22, ease: 'none', scrollTrigger: { trigger: '.across', start: 'top top', end: 'bottom bottom', scrub: true } });
-      const pins = $$('.across .pin');
-      gsap.set(pins, { opacity: 0 });
-      ST.create({ trigger: '.across', start: 'top 40%', once: true, onEnter: () => gsap.to(pins, { opacity: 1, duration: 1, stagger: .2 }) });
+    // stacked portfolio cards: each one shrinks and dims as the next slides over it
+    const cards = $$('.st-card');
+    cards.forEach((c, i) => {
+      const next = cards[i + 1];
+      if (next) gsap.to(c, { scale: .93, opacity: .5, ease: 'none', scrollTrigger: { trigger: next, start: 'top 88%', end: 'top 12%', scrub: true } });
+      const sti = $('.st-img', c);
+      if (sti) {
+        const px = wrapBg(sti); sti._rest = 1.05;
+        gsap.set(px, { scale: 1.35, filter: HAZE });
+        gsap.to(px, { scale: 1.05, filter: CLEAR, ease: 'none', scrollTrigger: { trigger: c, start: 'top 92%', end: 'top 30%', scrub: true } });
+        hoverZoom(sti);
+      }
+    });
+
+    // fog: a wash of white and drifting clouds covers the section above, then the clients appear
+    const fog = $('.fogsec');
+    if (fog) {
+      const clouds = $$('.cloud', fog), wash = $('.fog-wash', fog);
+      clouds.forEach((c, i) => { c.style.backgroundImage = `url(${cloudTexture(i ? 20240 : 7391)})`; });
+      gsap.set(clouds, { opacity: 0, yPercent: 24 });
+      gsap.set(wash, { opacity: 0 });
+      gsap.timeline({ scrollTrigger: { trigger: fog, start: 'top 98%', end: 'top 12%', scrub: .9 } })
+        .to(wash, { opacity: 1, ease: 'none', duration: 1 }, 0)
+        .to(clouds, { opacity: .95, yPercent: 0, ease: 'none', duration: 1, stagger: .15 }, 0);
+      gsap.fromTo(clouds, { xPercent: 0 }, { xPercent: i => (i ? 5 : -5), yPercent: -14, ease: 'none', immediateRender: false, scrollTrigger: { trigger: fog, start: 'top 12%', end: 'bottom bottom', scrub: true } });
+      const track = $('.track', fog);
+      if (track) {
+        track.style.animation = 'none';
+        let x = 0; const half = () => track.scrollWidth / 2;
+        gsap.ticker.add(() => {
+          const v = lenis.velocity || 0;
+          x -= .8 + Math.min(Math.abs(v), 40) * .45 * (v < 0 ? -1 : 1);
+          const h = half(); if (x <= -h) x += h; if (x > 0) x -= h;
+          gsap.set(track, { x });
+        });
+      }
     }
 
-    // clients marquee follows the scroll speed
-    const track = $('.track');
-    if (track) {
-      track.style.animation = 'none';
-      let x = 0; const half = () => track.scrollWidth / 2;
-      gsap.ticker.add(() => {
-        const v = lenis.velocity || 0;
-        x -= .8 + Math.min(Math.abs(v), 40) * .45 * (v < 0 ? -1 : 1);
-        const h = half(); if (x <= -h) x += h; if (x > 0) x -= h;
-        gsap.set(track, { x });
-      });
+    // India: the photo opens like a letterbox, zooming out of fog
+    const ac = $('.across');
+    if (ac) {
+      const frame = $('.across-frame'), photo = $('.across .photo'), pins = $$('.across .pin');
+      gsap.set(photo, { xPercent: -50, transformOrigin: '50% 55%' });
+      gsap.fromTo(frame, { clipPath: 'inset(34% 5% 34% 5% round 22px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'power2.inOut', scrollTrigger: { trigger: ac, start: 'top 88%', end: 'top top', scrub: .7 } });
+      gsap.fromTo(photo, { scale: 1.45, filter: HAZE }, { scale: 1.1, filter: CLEAR, ease: 'none', scrollTrigger: { trigger: ac, start: 'top 88%', end: 'top top', scrub: .7 } });
+      gsap.fromTo(photo, { scale: 1.1 }, { scale: 1.26, ease: 'none', immediateRender: false, scrollTrigger: { trigger: ac, start: 'top top', end: 'bottom bottom', scrub: true } });
+      gsap.set(pins, { opacity: 0 });
+      ST.create({ trigger: ac, start: 'top 30%', once: true, onEnter: () => gsap.to(pins, { opacity: 1, duration: 1, stagger: .2 }) });
     }
 
     // contact: background drifts, form rises
@@ -284,22 +348,24 @@
 
     const home = $('.hero');
     if (home) {
-      const vid = $('video', home), h1 = $('h1', home), links = $$('.hero-links a', home), caps = $$('.hero-caps span', home);
-      gsap.set(vid, { scale: 1.2 });
+      const vid = $('video', home), h1 = $('h1', home), links = $$('.hero-links a', home), caps = $$('.hero-caps span', home), tag = $('.hero-tag', home);
+      gsap.set(vid, { scale: 1.22, filter: HAZE });                                 // starts zoomed in and in a haze
       gsap.set(home, { clipPath: 'inset(6% 3% 6% 3% round 28px)' });
-      const t1 = textIn(h1, { immediate: true, dur: 1.3 });
+      const t1 = textIn(h1, { mode: 'chars', immediate: true, dur: 1.3 });
       gsap.set(links, { opacity: 0, y: 24 });
-      gsap.set(caps, { opacity: 0, y: 16 });
+      gsap.set([...caps, tag], { opacity: 0, y: 16 });
       home._intro = () => {
         const tl = gsap.timeline();
         tl.to(home, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1.8, ease: 'expo.inOut', clearProps: 'clipPath' }, 0)
-          .to(vid, { scale: 1.02, duration: 2.4, ease: EXPO }, 0)
-          .add(t1, .55)
-          .to(links, { opacity: 1, y: 0, duration: 1, ease: EXPO, stagger: .12, clearProps: 'transform' }, 1.3)
-          .to(caps, { opacity: 1, y: 0, duration: 1, ease: EXPO, stagger: .1, clearProps: 'transform' }, 1.5);
+          .to(vid, { scale: 1, duration: 2.6, ease: 'power3.out' }, 0)                // zoom out
+          .to(vid, { filter: CLEAR, duration: 2.4, ease: 'power2.out', clearProps: 'filter' }, 0)
+          .add(t1, .6)
+          .to(links, { opacity: 1, y: 0, duration: 1, ease: EXPO, stagger: .12, clearProps: 'transform' }, 1.4)
+          .to([...caps, tag], { opacity: 1, y: 0, duration: 1, ease: EXPO, stagger: .08, clearProps: 'transform' }, 1.6);
         return tl;
       };
-      gsap.fromTo(vid, { yPercent: 0 }, { yPercent: 6, ease: 'none', immediateRender: false, scrollTrigger: { trigger: home, start: 'top top', end: 'bottom top', scrub: true } });
+      // scrolling away: the picture pushes in (zoom in) while the text lifts off
+      gsap.fromTo(vid, { yPercent: 0, scale: 1 }, { yPercent: 6, scale: 1.14, ease: 'none', immediateRender: false, scrollTrigger: { trigger: home, start: 'top top', end: 'bottom top', scrub: true } });
       gsap.fromTo('.hero-in', { yPercent: 0, opacity: 1 }, { yPercent: -22, opacity: 0, ease: 'none', immediateRender: false, scrollTrigger: { trigger: home, start: 'top top', end: '65% top', scrub: true } });
       gsap.fromTo('.hero-shade', { opacity: 1 }, { opacity: 1.7, ease: 'none', immediateRender: false, scrollTrigger: { trigger: '.flow', start: 'top bottom', end: 'top top', scrub: true } });
     }
@@ -308,15 +374,16 @@
     if (inner) {
       const h1 = $('h1', inner), sub = $('.sub', inner), cta = $('.ulink', inner), back = $('.back', inner), lab = $('.ih-label', inner), vid = $('.hero-bg', inner);
       const target = vid || (wrapBg(inner), inner._px);
-      gsap.set(target, { scale: 1.22 });
+      gsap.set(target, { scale: 1.22, filter: HAZE });
       gsap.set(inner, { clipPath: 'inset(5% 3% 5% 3% round 26px)' });
-      const t1 = textIn(h1, { immediate: true, dur: 1.3 });
+      const t1 = textIn(h1, { mode: 'chars', immediate: true, dur: 1.3 });
       const t2 = sub ? textIn(sub, { immediate: true, dur: 1.1 }) : null;
       gsap.set([back, cta, lab].filter(Boolean), { opacity: 0, y: 20 });
       inner._intro = () => {
         const tl = gsap.timeline();
         tl.to(inner, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1.6, ease: 'expo.inOut', clearProps: 'clipPath' }, 0)
-          .to(target, { scale: 1.03, duration: 2.2, ease: EXPO }, 0)
+          .to(target, { scale: 1, duration: 2.4, ease: 'power3.out' }, 0)
+          .to(target, { filter: CLEAR, duration: 2.2, ease: 'power2.out', clearProps: 'filter' }, 0)
           .to([back, lab].filter(Boolean), { opacity: 1, y: 0, duration: .9, ease: EXPO, stagger: .1 }, .5)
           .add(t1, .6);
         if (t2) tl.add(t2, 1);
@@ -346,7 +413,7 @@
       const firstFrame = new Promise(r => { if (!media || media.readyState >= 2) r(); else media.addEventListener('loadeddata', r, { once: true }); });
       const ready = Promise.race([Promise.all([document.fonts ? document.fonts.ready : 0, firstFrame]), new Promise(r => setTimeout(r, seen ? 1400 : 3000))]);
       const lift = (dur, then) => gsap.to(loader, { yPercent: -100, duration: dur, ease: 'expo.inOut', onComplete: () => { loader.remove(); then && then(); } });
-      if (seen) {                                                       // later pages: just a quick curtain lift
+      if (seen) {
         gsap.set([row, $('.ld-line', loader)], { opacity: 0 });
         ready.then(() => gsap.delayedCall(.1, () => { resolve(); lift(.9); }));
         return;
@@ -375,11 +442,10 @@
       b.addEventListener('mousemove', e => { const r = b.getBoundingClientRect(); xTo((e.clientX - r.left - r.width / 2) * .25); yTo((e.clientY - r.top - r.height / 2) * .35); });
       b.addEventListener('mouseleave', () => { xTo(0); yTo(0); });
     });
-    // menu: columns rise in once the panel has opened
+    // dropdown menu: items rise in one after another
     addEventListener('menu:toggle', e => {
       if (!e.detail) return;
-      gsap.fromTo($$('.menu-col'), { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, ease: EXPO, stagger: .09, delay: .45, clearProps: 'transform,opacity' });
-      gsap.fromTo($$('.menu-foot > *, .menu-top > *'), { opacity: 0 }, { opacity: 1, duration: .8, delay: .6, clearProps: 'opacity' });
+      gsap.fromTo($$('#site-menu .sm-inner > ul > li'), { yPercent: 105, opacity: 0 }, { yPercent: 0, opacity: 1, duration: .9, ease: EXPO, stagger: .07, delay: .1, clearProps: 'transform,opacity' });
     });
     // popups
     const modal = $('#modal');

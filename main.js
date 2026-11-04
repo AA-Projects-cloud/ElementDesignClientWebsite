@@ -20,22 +20,6 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: 0.4 });
 document.querySelectorAll('[data-count]').forEach(el => io.observe(el));
 
-/* ---------- portfolio slider ---------- */
-const slides = [...document.querySelectorAll('.reel-slide')];
-const reelNum = document.getElementById('reelNum');
-let cur = 0;
-function goTo(n) {
-  const next = (n + slides.length) % slides.length;
-  if (next === cur) return;
-  const from = cur; cur = next;
-  slides[from].classList.remove('on');
-  slides[cur].classList.add('on');
-  reelNum.textContent = '0' + (cur + 1);
-  window.dispatchEvent(new CustomEvent('reel:change', { detail: { from, to: cur } }));
-}
-document.getElementById('reelNext')?.addEventListener('click', () => goTo(cur + 1));
-document.getElementById('reelPrev')?.addEventListener('click', () => goTo(cur - 1));
-
 /* ---------- contact form ---------- */
 document.getElementById('form')?.addEventListener('submit', e => {
   e.preventDefault();
