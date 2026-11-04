@@ -8,187 +8,208 @@
 <meta name="description" content="Element Design is an international bureau for premium architectural and interior design.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Barlow+Condensed:wght@300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="motion.css">
-<script type="importmap">
-{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
-</script>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
 </head>
-<body>
-<div class="preloader" id="preloader" aria-hidden="true">
-  <div class="pl-inner">
-    <div class="pl-top"><img class="pl-logo" src="logo.png" alt=""><div class="pl-name">ELEMENT DESIGN<sup>®</sup></div></div>
-    <div class="pl-row"><div class="pl-bar"><i></i></div><b class="pl-count">0%</b></div>
-  </div>
+<body class="home">
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="ld-row"><div class="ld-name"><img src="logo.png" alt=""><span>ELEMENT DESIGN<sup>®</sup></span></div><b class="ld-count">0</b></div>
+  <div class="ld-line"><i></i></div>
 </div>
-<noscript><style>.preloader{display:none}html .reveal{opacity:1;transform:none}</style></noscript>
+<noscript><style>.loader{display:none}</style></noscript>
 
-
-<header class="nav" id="nav">
-  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
-  <a class="logo" href="#top" aria-label="Element Design"><img class="logo-img" src="logo.png" alt=""><span>ELEMENT DESIGN<sup>®</sup></span></a>
-  <ul class="nav-links" id="navLinks"></ul>
-  <div class="nav-right">
-    <a href="#contact" class="leave"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Leave a request</a>
-    <span class="lang"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><b>EN</b></span>
-  </div>
-</header>
-
-<div class="m-menu" id="mMenu" aria-hidden="true"></div>
-
-<main id="top">
-  <!-- HERO: full-screen looping video background -->
-  <section class="hero">
+<main>
+  <!-- HERO -->
+  <section class="hero" id="top">
     <video id="bg" src="hero.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
     <div class="hero-shade"></div>
-    <div class="hero-copy">
-      <h1 class="reveal">ELEMENT DESIGN<sup>®</sup></h1>
-      <p class="reveal d1"><b>LEADING INTERNATIONAL BUREAU</b> FOR PREMIUM ARCHITECTURAL AND INTERIOR DESIGN</p>
-      <a href="#contact" class="pill reveal d2">Discuss your project</a>
+    <div class="hero-in">
+      <h1>Leading international bureau for premium architectural and interior design</h1>
+      <div class="hero-links">
+        <a class="ulink" href="#contact">Discuss your project <span>→</span></a>
+        <a class="ulink" href="portfolio.html">Discover portfolio <span>→</span></a>
+      </div>
     </div>
+    <div class="hero-caps"><span>Architecture</span><span>Interiors</span><span>Commercial</span><span>Element Design ®</span></div>
   </section>
 
-  <div class="page">
-    <!-- GLOBE -->
-    <section class="globe" id="countries">
-      <div class="india reveal" aria-hidden="true">
-        <div class="india-stage">
-          <img src="india-night.jpg" alt="">
-          <svg viewBox="0 0 736 1308" preserveAspectRatio="xMidYMid meet">
-            <defs><filter id="pinglow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-            <path class="net" d="M295 522 L170 646 L322 690 L315 780 L362 900 L568 658 Z"/>
-            <g class="pin" style="--i:0"><circle class="rip" cx="295" cy="522" r="6"/><circle class="dot" cx="295" cy="522" r="6" filter="url(#pinglow)"/><text x="312" y="516">Delhi</text></g>
-            <g class="pin" style="--i:1"><circle class="rip" cx="170" cy="646" r="6"/><circle class="dot" cx="170" cy="646" r="6" filter="url(#pinglow)"/><text x="187" y="640">Mumbai</text></g>
-            <g class="pin" style="--i:2"><circle class="rip" cx="322" cy="690" r="6"/><circle class="dot" cx="322" cy="690" r="6" filter="url(#pinglow)"/><text x="339" y="684">Hyderabad</text></g>
-            <g class="pin" style="--i:3"><circle class="rip" cx="315" cy="780" r="6"/><circle class="dot" cx="315" cy="780" r="6" filter="url(#pinglow)"/><text x="332" y="774">Bangalore</text></g>
-            <g class="pin" style="--i:4"><circle class="rip" cx="362" cy="900" r="6"/><circle class="dot" cx="362" cy="900" r="6" filter="url(#pinglow)"/><text x="379" y="894">Chennai</text></g>
-            <g class="pin" style="--i:5"><circle class="rip" cx="568" cy="658" r="6"/><circle class="dot" cx="568" cy="658" r="6" filter="url(#pinglow)"/><text x="585" y="652">Kolkata</text></g>
-          </svg>
+  <div class="flow">
+    <!-- STYLE: scattered projects -->
+    <section class="scatter" id="style">
+      <div class="scatter-title"><div><h2>Discover the <em>Element Design ®</em> style</h2></div></div>
+      <div class="sc-img sc-1" data-sp="0.10" style="background-image:url(architecture.jpg)"></div>
+      <div class="sc-img sc-2" data-sp="0.22" style="background-image:url(award.jpg);background-position:center 30%"></div>
+      <div class="sc-img sc-3" data-sp="0.06" style="background-image:url(commercial.jpg)"></div>
+      <div class="sc-img sc-4" data-sp="0.14" style="background-image:url(interiors.jpg)"></div>
+      <div class="sc-img sc-5" data-sp="0.20" style="background-image:url(drawings.jpg)"></div>
+      <div class="sc-img sc-6" data-sp="0.05" style="background-image:url(meeting.jpg)"></div>
+      <div class="sc-img sc-7" data-sp="0.12" style="background-image:url(construction.jpg)"></div>
+    </section>
+
+    <!-- PORTFOLIO: full-frame slider -->
+    <section class="reel" id="portfolio">
+      <div class="reel-frame">
+        <span class="reel-title">Portfolio</span>
+        <span class="reel-count"><b id="reelNum">01</b> / 03</span>
+        <article class="reel-slide on" data-label="Architecture">
+          <div class="bg" style="background-image:url(architecture.jpg);background-position:center 35%"></div>
+          <div class="reel-copy"><span class="label">More than <em>650</em> completed projects</span><h2>Architecture</h2><a class="ulink" href="portfolio.html?c=architectural-design">Architectural design <span>→</span></a></div>
+        </article>
+        <article class="reel-slide" data-label="Interiors">
+          <div class="bg" style="background-image:url(interiors.jpg)"></div>
+          <div class="reel-copy"><span class="label">More than <em>650</em> completed projects</span><h2>Interiors</h2><a class="ulink" href="portfolio.html?c=residential-interiors">Interior design <span>→</span></a></div>
+        </article>
+        <article class="reel-slide" data-label="Commercial">
+          <div class="bg" style="background-image:url(commercial.jpg);background-position:center 55%"></div>
+          <div class="reel-copy"><span class="label">More than <em>650</em> completed projects</span><h2>Commercial</h2><a class="ulink" href="portfolio.html?c=commercial-interiors">Commercial interiors <span>→</span></a></div>
+        </article>
+        <div class="reel-arrows">
+          <button class="circle-btn" id="reelPrev" type="button" aria-label="Previous"><svg viewBox="0 0 14 14"><path d="M12 7H2M6 3L2 7l4 4"/></svg></button>
+          <button class="circle-btn" id="reelNext" type="button" aria-label="Next"><svg viewBox="0 0 14 14"><path d="M2 7h10M8 3l4 4-4 4"/></svg></button>
         </div>
       </div>
-      <div class="globe-copy reveal">
-        <h2>Completed projects across India</h2>
-        <p>We have showcasing projects in the distinctive Element Design ® style around the world <span>the most extensive portfolio</span></p>
-        <a href="#portfolio" class="outline">Discover portfolio</a>
+    </section>
+
+    <!-- STATEMENT -->
+    <section class="statement" id="about">
+      <span class="label">About</span>
+      <h2><span class="thumb" style="background-image:url(award.jpg);background-position:center 35%"></span>We construct houses and design interiors in our signature style, thoughtfully tailored to your lifestyle scenarios</h2>
+      <div class="statement-rule">
+        <div class="big98"><b data-count="98">0</b><span>% of our customers recommend us</span></div>
+        <div><a class="ulink" href="#contact">Contact a manager <span>→</span></a></div>
       </div>
     </section>
 
-    <!-- STATS -->
-    <section class="stats">
-      <div class="stat-card reveal"><b data-count="1200" data-fmt="space">0</b><span class="u">m²</span><p>average project area</p><canvas class="ico3d" data-icon="houses" aria-hidden="true"></canvas></div>
-      <div class="stat-card reveal d1"><b data-count="98">0</b><span class="u">%</span><p>of customers recommend* us</p><small>*We continuously measure client loyalty index (NPS)</small><canvas class="ico3d" data-icon="trophy" aria-hidden="true"></canvas></div>
-      <div class="stat-card reveal d2"><b data-count="2000" data-fmt="space">0</b><span class="u">m²</span><p>in-house manufacturing facility</p><canvas class="ico3d" data-icon="chair" aria-hidden="true"></canvas></div>
-      <div class="stat-card reveal d3"><b data-count="10">0</b><span class="u">+ years</span><p>of expertise in architecture, design, and construction</p><canvas class="ico3d" data-icon="star" aria-hidden="true"></canvas></div>
+    <!-- SERVICE POINTS: pinned step-through -->
+    <section class="steps" id="service">
+      <div class="steps-bg">
+        <div class="bg on" style="background-image:url(interiors.jpg)"></div>
+        <div class="bg" style="background-image:url(meeting.jpg)"></div>
+        <div class="bg" style="background-image:url(drawings.jpg)"></div>
+        <div class="bg" style="background-image:url(schedule.jpg)"></div>
+        <div class="bg" style="background-image:url(construction.jpg)"></div>
+        <div class="bg" style="background-image:url(architecture.jpg);background-position:center 35%"></div>
+      </div>
+      <div class="steps-head">
+        <h2><em>Element Design ®</em> – your life-long partner</h2>
+        <p>An exceptional service experience tailored to discerning clients</p>
+      </div>
+      <div class="steps-dots" aria-hidden="true"><b class="on"></b><b></b><b></b><b></b><b></b><b></b></div>
+      <div class="steps-main">
+        <div class="step-item on" data-modal="0"><div class="step-text"><span class="label">Service 01</span><h3>Customary premium service</h3><p>Enjoy your usual lifestyle while we bring your vision to life</p><button class="ulink step-more" type="button">Read more <span>→</span></button></div></div>
+        <div class="step-item" data-modal="1"><div class="step-text"><span class="label">Service 02</span><h3>Personal architecture &amp; design expert</h3><p>Your trusted advisor within Element Design ®</p><button class="ulink step-more" type="button">Read more <span>→</span></button></div></div>
+        <div class="step-item" data-modal="-1"><div class="step-text"><span class="label">Service 03</span><h3>Bespoke design</h3><p>The project will be designed exclusively for you based on individual sketches</p></div></div>
+        <div class="step-item" data-modal="3"><div class="step-text"><span class="label">Service 04</span><h3>Roadmap</h3><p>A precise project management system with clear approval milestones</p><button class="ulink step-more" type="button">Read more <span>→</span></button></div></div>
+        <div class="step-item" data-modal="4"><div class="step-text"><span class="label">Service 05</span><h3>Reporting system</h3><p>You can monitor the construction process online</p><button class="ulink step-more" type="button">Read more <span>→</span></button></div></div>
+        <div class="step-item" data-modal="5"><div class="step-text"><span class="label">Service 06</span><h3>Transparency</h3><p>Detailed timelines for your project</p><button class="ulink step-more" type="button">Read more <span>→</span></button></div></div>
+        <div class="step-num"><span id="stepNum">01</span><small>OF 06</small></div>
+      </div>
+      <div class="steps-track"><i></i></div>
     </section>
 
-    <!-- PORTFOLIO -->
-    <section class="box" id="portfolio">
-      <h2 class="reveal">MORE THAN <em data-count="650">0</em> COMPLETED PROJECTS</h2>
-      <div class="rail" id="rail">
-        <a href="portfolio.html?c=architectural-design" class="slide"><div class="pic g1"></div><span>Architecture</span></a>
-        <a href="portfolio.html?c=residential-interiors" class="slide"><div class="pic g2"></div><span>Interiors</span></a>
-        <a href="portfolio.html?c=commercial-interiors" class="slide"><div class="pic g3"></div><span>Commercial</span></a>
+    <!-- SPEC NUMBERS -->
+    <section class="specs">
+      <div class="specs-head"><span class="label">Element Design ®</span><span class="label">Premium architectural and interior design</span></div>
+      <div class="specs-grid">
+        <div class="spec"><b><span data-count="1200" data-fmt="space">0</span><small>m²</small></b><p>average project area</p></div>
+        <div class="spec"><b><span data-count="98">0</span><small>%</small></b><p>of customers recommend* us</p><span class="note">*We continuously measure client loyalty index (NPS)</span></div>
+        <div class="spec"><b><span data-count="2000" data-fmt="space">0</span><small>m²</small></b><p>in-house manufacturing facility</p></div>
+        <div class="spec"><b><span data-count="10">0</span><small>+ years</small></b><p>of expertise in architecture, design, and construction</p></div>
       </div>
     </section>
 
-    <!-- SERVICE -->
-    <section class="service" id="service">
-      <h2 class="center reveal"><em>ELEMENT DESIGN ®</em> – YOUR LIFE-LONG PARTNER</h2>
-      <p class="center muted reveal">An exceptional service experience tailored to discerning clients</p>
-      <div class="cards">
-        <article class="s-card reveal" data-modal="0" role="button" tabindex="0" aria-haspopup="dialog"><h3>Customary premium service</h3><p>Enjoy your usual lifestyle while we bring your vision to life</p><canvas class="ico3d s-ico" data-icon="gem" aria-hidden="true"></canvas></article>
-        <article class="s-card reveal d1" data-modal="1" role="button" tabindex="0" aria-haspopup="dialog"><h3>Personal architecture &amp; design expert</h3><p>Your trusted advisor within Element Design ®</p><canvas class="ico3d s-ico" data-icon="expert" aria-hidden="true"></canvas></article>
-        <article class="s-card s-static reveal"><h3>Bespoke design</h3><p>The project will be designed exclusively for you based on individual sketches</p><canvas class="ico3d s-ico" data-icon="lock" aria-hidden="true"></canvas></article>
-        <article class="s-card reveal d1" data-modal="3" role="button" tabindex="0" aria-haspopup="dialog"><h3>Roadmap</h3><p>A precise project management system with clear approval milestones</p><canvas class="ico3d s-ico" data-icon="pins" aria-hidden="true"></canvas></article>
-        <article class="s-card reveal" data-modal="4" role="button" tabindex="0" aria-haspopup="dialog"><h3>Reporting system</h3><p>You can monitor the construction process online</p><canvas class="ico3d s-ico" data-icon="camera" aria-hidden="true"></canvas></article>
-        <article class="s-card reveal d1" data-modal="5" role="button" tabindex="0" aria-haspopup="dialog"><h3>Transparency</h3><p>Detailed timelines for your project</p><canvas class="ico3d s-ico" data-icon="chart" aria-hidden="true"></canvas></article>
-      </div>
-    </section>
+    <!-- RECOGNITION: dark card -->
+    <div class="darkcard-wrap">
+      <section class="darkcard" id="recognition">
+        <div class="dc-copy">
+          <h2>Worldwide recognition</h2>
+          <div>
+            <div class="dc-count"><span data-count="1118057" data-fmt="space">0</span></div>
+            <p>people follow our development on social media</p>
+            <div class="dc-links">
+              <a href="https://www.instagram.com/the_element_designs?rpxt=Y3h3NmVkMjdmZGI4" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="#">Pinterest</a><a href="#">VK</a><a href="#">YouTube</a>
+            </div>
+          </div>
+        </div>
+        <div class="dc-media"><video src="recognition.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video></div>
+      </section>
+    </div>
 
-    <!-- STYLE -->
-    <section class="style">
-      <div class="style-text reveal">
-        <h2>DISCOVER <em>THE ELEMENT DESIGN ® STYLE</em></h2>
-        <p>We construct houses and design interiors in our signature style, thoughtfully tailored to your lifestyle scenarios</p>
-        <div class="big"><b data-count="98">0</b>%</div>
-        <p class="muted">of our customers recommend us</p>
-        <a href="#contact" class="pill wide">Contact a manager</a>
-      </div>
-      <div class="style-img reveal d1"></div>
-    </section>
-
-
-    <!-- BRAND MARQUEE -->
-    <section class="mq-band" aria-hidden="true"><div class="mq-track"><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span><span>Element <em>Design</em><sup>®</sup></span></div></section>
-
-    <!-- RECOGNITION -->
-    <section class="recog" id="recognition">
-      <video class="recog-bg" src="recognition.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
-      <div class="recog-box reveal">
-        <h2>WORLDWIDE RECOGNITION</h2>
-        <div class="big num"><b data-count="1118057" data-fmt="space">0</b></div>
-        <p>people follow our development on social media</p>
-        <div class="socials">
-          <a href="https://www.instagram.com/the_element_designs?rpxt=Y3h3NmVkMjdmZGI4" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><canvas class="ico3d soc-ico" data-icon="instagram" aria-hidden="true"></canvas></a>
-          <a href="#" aria-label="Pinterest"><canvas class="ico3d soc-ico" data-icon="pinterest" aria-hidden="true"></canvas></a>
-          <a href="#" aria-label="VK"><canvas class="ico3d soc-ico" data-icon="vk" aria-hidden="true"></canvas></a>
-          <a href="#" aria-label="YouTube"><canvas class="ico3d soc-ico" data-icon="youtube" aria-hidden="true"></canvas></a>
+    <!-- ACROSS INDIA -->
+    <section class="across" id="across">
+      <div class="across-stage">
+        <div class="photo">
+          <img src="india-night.jpg" alt="India at night">
+          <svg viewBox="0 0 736 1308" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <path class="net" d="M295 522 L170 646 L322 690 L315 780 L362 900 L568 658 Z"/>
+            <g class="pin" style="--i:0"><circle class="rip" cx="295" cy="522" r="6"/><circle class="dot" cx="295" cy="522" r="4"/><text x="312" y="516">Delhi</text></g>
+            <g class="pin" style="--i:1"><circle class="rip" cx="170" cy="646" r="6"/><circle class="dot" cx="170" cy="646" r="4"/><text x="187" y="640">Mumbai</text></g>
+            <g class="pin" style="--i:2"><circle class="rip" cx="322" cy="690" r="6"/><circle class="dot" cx="322" cy="690" r="4"/><text x="339" y="684">Hyderabad</text></g>
+            <g class="pin" style="--i:3"><circle class="rip" cx="315" cy="780" r="6"/><circle class="dot" cx="315" cy="780" r="4"/><text x="332" y="774">Bangalore</text></g>
+            <g class="pin" style="--i:4"><circle class="rip" cx="362" cy="900" r="6"/><circle class="dot" cx="362" cy="900" r="4"/><text x="379" y="894">Chennai</text></g>
+            <g class="pin" style="--i:5"><circle class="rip" cx="568" cy="658" r="6"/><circle class="dot" cx="568" cy="658" r="4"/><text x="585" y="652">Kolkata</text></g>
+          </svg>
+        </div>
+        <div class="across-copy">
+          <h2>Completed projects across India</h2>
+          <div><p>We have showcasing projects in the distinctive Element Design ® style around the world the most extensive portfolio</p><a class="ulink" href="portfolio.html">Discover portfolio <span>→</span></a></div>
         </div>
       </div>
     </section>
 
     <!-- CLIENTS -->
     <section class="clients">
-      <h2 class="center reveal">WE ARE CHOSEN BY THOSE <em>WHO STRIVE FOR EXCELLENCE</em> — AMONG OUR CLIENTS:</h2>
+      <div class="clients-head"><span class="label">Clients</span><h2>We are chosen by those <em>who strive for excellence</em> — among our clients:</h2></div>
       <div class="marquee"><div class="track">
-        <span>MANDARIN ORIENTAL</span><span>FOUR SEASONS</span><span>AMAN</span><span>ROSEWOOD</span><span>BULGARI HOTELS</span><span>SIX SENSES</span>
-        <span>MANDARIN ORIENTAL</span><span>FOUR SEASONS</span><span>AMAN</span><span>ROSEWOOD</span><span>BULGARI HOTELS</span><span>SIX SENSES</span>
+        <span>Mandarin Oriental</span><span>Four Seasons</span><span>Aman</span><span>Rosewood</span><span>Bulgari Hotels</span><span>Six Senses</span>
+        <span>Mandarin Oriental</span><span>Four Seasons</span><span>Aman</span><span>Rosewood</span><span>Bulgari Hotels</span><span>Six Senses</span>
       </div></div>
     </section>
 
     <!-- PROCESS -->
     <section class="process">
-      <h2 class="center reveal">LEARN MORE ABOUT <em>CREATING YOUR DREAM PROJECT</em> FROM YOUR PERSONAL EXPERT</h2>
-      <div class="three">
-        <div class="step reveal"><b>1</b><h3>FILL OUT THE FORM</h3><p>Provide your name and current phone number</p></div>
-        <div class="step reveal d1"><b>2</b><h3>WE WILL CONTACT YOU</h3><p>Our personal expert will discuss your project's requirements and introduce you to our approach</p></div>
-        <div class="step reveal d2"><b>3</b><h3>RECEIVE A TAILORED OFFER</h3><p>After a detailed review of your wishes, we will prepare a personalized project plan</p></div>
-      </div>
+      <div class="process-head"><span class="label">Process</span><h2>Learn more about <em>creating your dream project</em> from your personal expert</h2></div>
+      <ol class="rows">
+        <li><span class="no">01</span><h3>Fill out the form</h3><p>Provide your name and current phone number</p></li>
+        <li><span class="no">02</span><h3>We will contact you</h3><p>Our personal expert will discuss your project's requirements and introduce you to our approach</p></li>
+        <li><span class="no">03</span><h3>Receive a tailored offer</h3><p>After a detailed review of your wishes, we will prepare a personalized project plan</p></li>
+      </ol>
     </section>
 
     <!-- CONTACT -->
-    <section class="contact" id="contact">
-      <div class="contact-img reveal"></div>
-      <div class="reveal d1">
-        <h2>TURN YOUR DREAMS OF THE PERFECT HOME INTO REALITY <em>WITH ELEMENT DESIGN ®</em></h2>
-        <p class="muted">Leave your contact details, and our manager will reach out to you to discuss your project. We look forward to beginning this inspiring journey with you.</p>
-        <form id="form">
-          <p class="f-label">Fill out the form and our manager will contact you</p>
-          <label class="f-field"><input name="name" placeholder="Your name" required autocomplete="name"></label>
-          <div class="f-field f-phone"><span class="f-code">IN (+91)</span><input name="phone" type="tel" placeholder="98765 43210" required autocomplete="tel-national" inputmode="tel" pattern="[0-9 ]{10,12}"></div>
-          <button class="pill wide" type="submit">Request a manager's consultation</button>
-          <small id="note">By clicking the “Send” button, I accept the <a href="#">privacy policy</a> terms</small>
-        </form>
+    <section class="close" id="contact">
+      <div class="bgwrap"><div class="bg" style="background-image:url(contact.webp)"></div></div>
+      <div class="close-in">
+        <div>
+          <h2>Turn your dreams of the perfect home into reality with <em>Element Design ®</em></h2>
+          <p class="lead">Leave your contact details, and our manager will reach out to you to discuss your project. We look forward to beginning this inspiring journey with you.</p>
+        </div>
+        <div class="close-form">
+          <form id="form">
+            <span class="label">Fill out the form and our manager will contact you</span>
+            <label class="f-field"><input name="name" placeholder="Your name" required autocomplete="name"></label>
+            <div class="f-field f-phone"><span class="f-code">IN (+91)</span><input name="phone" type="tel" placeholder="98765 43210" required autocomplete="tel-national" inputmode="tel" pattern="[0-9 ]{10,12}"></div>
+            <button class="pill wide" type="submit">Request a manager's consultation</button>
+            <small id="note">By clicking the “Send” button, I accept the <a href="#">privacy policy</a> terms</small>
+          </form>
+        </div>
       </div>
     </section>
   </div>
 </main>
 
-
 <div class="modal" id="modal" hidden>
-  <div class="m-box" role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="m-box" role="dialog" aria-modal="true" aria-labelledby="m-title" data-lenis-prevent>
     <button class="m-x" id="m-close" aria-label="Close"><svg viewBox="0 0 22 22" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1"><path d="M1 1l20 20M21 1L1 21"/></svg></button>
     <div id="m-body"></div>
   </div>
 </div>
 
-<div class="cookie" id="cookie">This website uses Cookies. <button id="accept">Accept</button></div>
-
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script type="module" src="icons.js"></script>
 <script type="module" src="main.js"></script>
 <script type="module" src="common.js"></script>
 <script type="module" src="motion.js"></script>

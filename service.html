@@ -7,20 +7,17 @@
 <title>Services — Element Design</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Barlow+Condensed:wght@300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="motion.css">
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
 </head>
 <body class="inner">
-<div class="preloader" id="preloader" aria-hidden="true">
-  <div class="pl-inner">
-    <div class="pl-top"><img class="pl-logo" src="logo.png" alt=""><div class="pl-name">ELEMENT DESIGN<sup>®</sup></div></div>
-    <div class="pl-row"><div class="pl-bar"><i></i></div><b class="pl-count">0%</b></div>
-  </div>
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="ld-row"><div class="ld-name"><img src="logo.png" alt=""><span>ELEMENT DESIGN<sup>®</sup></span></div><b class="ld-count">0</b></div>
+  <div class="ld-line"><i></i></div>
 </div>
-<noscript><style>.preloader{display:none}html .reveal{opacity:1;transform:none}</style></noscript>
+<noscript><style>.loader{display:none}</style></noscript>
 
-<main><div id="app"></div></main>
+<main><div id="app" class="page"></div></main>
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>

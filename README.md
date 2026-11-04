@@ -4,8 +4,8 @@ Static website (HTML, CSS and JavaScript, no build step) for Element Design.
 
 - Home: `index.html`
 - Inner pages: `about.html`, `career.html`, `blog.html`, `article.html?slug=…`, `portfolio.html`, `services.html`, `service.html?s=…`
-- Shared code: `common.js` (header, menus, footer), `inner.js` (inner-page helpers), `data.js` (services, portfolio, blog content), `icons.js` (3D icons), `main.js` (home page), `style.css`
-- Three.js is loaded from a CDN (unpkg) through an import map, so no install is needed.
+- Shared code: `common.js` (top bar, full-screen menu, footer), `inner.js` (inner-page helpers), `data.js` (services, portfolio, blog content), `main.js` (home page), `motion.js` (loader, smooth scroll, animations), `site.css` (all styles)
+- GSAP, ScrollTrigger and Lenis load from a CDN (jsdelivr), so no install is needed. Fonts: Familjen Grotesk and Instrument Serif (Google Fonts).
 
 ## Run locally
 

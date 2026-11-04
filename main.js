@@ -1,19 +1,11 @@
-/* ================= page behaviour ================= */
-// nav: hide on scroll down, show on scroll up
-const nav = document.getElementById('nav');
-let lastY = 0;
-addEventListener('scroll', () => {
-  const y = scrollY;
-  nav.classList.toggle('solid', y > 80);
-  lastY = y;
-}, { passive: true });
+/* Home page behaviour: count-ups, portfolio slider, service popups, contact form. */
 
-// reveal + count-up
+/* ---------- count-up numbers ---------- */
 const fmt = (n, f) => f === 'space' ? n.toLocaleString('en-US').replace(/,/g, ' ') : String(n);
 function countUp(el) {
   const end = +el.dataset.count, t0 = performance.now(), f = el.dataset.fmt;
   const step = now => {
-    const k = Math.min((now - t0) / 1800, 1);
+    const k = Math.min((now - t0) / 1900, 1);
     el.textContent = fmt(Math.round(end * (1 - Math.pow(1 - k, 3))), f);
     if (k < 1) requestAnimationFrame(step);
   };
@@ -22,34 +14,36 @@ function countUp(el) {
 const io = new IntersectionObserver(entries => {
   for (const e of entries) {
     if (!e.isIntersecting) continue;
-    e.target.classList.add('in');
-    if (e.target.dataset.count) countUp(e.target);
-    e.target.querySelectorAll('[data-count]').forEach(countUp);
+    countUp(e.target);
     io.unobserve(e.target);
   }
-}, { threshold: 0.2 });
-document.querySelectorAll('.reveal,[data-count]').forEach(el => io.observe(el));
+}, { threshold: 0.4 });
+document.querySelectorAll('[data-count]').forEach(el => io.observe(el));
 
-// draggable portfolio rail
-const rail = document.getElementById('rail');
-let down = false, sx = 0, sl = 0;
-let moved = 0;
-rail.addEventListener('pointerdown', e => { down = true; moved = 0; sx = e.clientX; sl = rail.scrollLeft; rail.style.scrollSnapType = 'none'; });
-addEventListener('pointerup', () => { down = false; rail.style.scrollSnapType = ''; });
-addEventListener('pointermove', e => { if (down) { moved = Math.max(moved, Math.abs(e.clientX - sx)); rail.scrollLeft = sl - (e.clientX - sx); } });
-rail.addEventListener('click', e => { if (moved > 6) e.preventDefault(); });
+/* ---------- portfolio slider ---------- */
+const slides = [...document.querySelectorAll('.reel-slide')];
+const reelNum = document.getElementById('reelNum');
+let cur = 0;
+function goTo(n) {
+  const next = (n + slides.length) % slides.length;
+  if (next === cur) return;
+  const from = cur; cur = next;
+  slides[from].classList.remove('on');
+  slides[cur].classList.add('on');
+  reelNum.textContent = '0' + (cur + 1);
+  window.dispatchEvent(new CustomEvent('reel:change', { detail: { from, to: cur } }));
+}
+document.getElementById('reelNext')?.addEventListener('click', () => goTo(cur + 1));
+document.getElementById('reelPrev')?.addEventListener('click', () => goTo(cur - 1));
 
-// misc
-document.getElementById('accept').onclick = () => document.getElementById('cookie').classList.add('gone');
-const _yr = document.getElementById('yr'); if (_yr) _yr.textContent = new Date().getFullYear();
-document.getElementById('form').addEventListener('submit', e => {
+/* ---------- contact form ---------- */
+document.getElementById('form')?.addEventListener('submit', e => {
   e.preventDefault();
   document.getElementById('note').textContent = 'Thank you — our manager will contact you shortly.';
   e.target.reset();
 });
 
-
-/* ================= service modals ================= */
+/* ---------- service popups ---------- */
 const MODALS = [
   { title: 'Element Design takes over the <em>full cycle of the project implementation</em>', lead: 'The studio team manages:',
     list: ['architectural design', 'interior design', 'engineering solutions'],
@@ -83,7 +77,7 @@ const MODALS = [
     text: 'After the first meeting with your personal expert, you will receive a detailed commercial proposal with a complete budget structure.',
     cta: 'Schedule a first meeting with a project expert', img: 'schedule.jpg' }
 ];
-const ic = d => `<svg viewBox="0 0 40 40" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">${d}</svg>`;
+const ic = d => `<svg viewBox="0 0 40 40" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round">${d}</svg>`;
 const STAGE_ICONS = [
   ic('<rect x="8" y="5" width="24" height="30" rx="3"/><path d="M13 13h14M13 19h14M13 25h9"/>'),
   ic('<path d="M5 20 20 7l15 13"/><path d="M9 18v16h22V18"/><path d="M17 34V24h6v10"/>'),
@@ -95,10 +89,10 @@ const STAGE_ICONS = [
 const modal = document.getElementById('modal'), mBody = document.getElementById('m-body');
 let lastFocus = null;
 function openModal(i) {
-  const m = MODALS[i];
+  const m = MODALS[i]; if (!m) return;
   let h = `<h2 class="m-title" id="m-title">${m.title}</h2>`;
   if (m.stages) {
-    h += `<p class="m-lead">${m.text}</p><div class="m-flow">` + m.stages.map((s, n) => `<div class="f-node" style="--n:${n}"><i>${STAGE_ICONS[n]}</i><h4>${s[0]}</h4><span>${s[1]}</span></div>`).join('') + '<div class="f-arc" aria-hidden="true"></div></div>';
+    h += `<p class="m-lead">${m.text}</p><div class="m-flow">` + m.stages.map((s, n) => `<div class="f-node"><i>${STAGE_ICONS[n]}</i><h4>${s[0]}</h4><span>${s[1]}</span></div>`).join('') + '<div class="f-arc" aria-hidden="true"></div></div>';
   } else {
     if (m.text && m.lead && i === 1) h += `<p class="m-lead">${m.text}</p>`;
     if (m.lead) h += `<p class="m-lead">${m.lead}</p>`;
@@ -123,9 +117,8 @@ function closeModal() {
   setTimeout(() => { modal.hidden = true; }, 300);
   if (lastFocus) lastFocus.focus();
 }
-document.querySelectorAll('.s-card[data-modal]').forEach(c => {
-  c.addEventListener('click', () => openModal(+c.dataset.modal));
-  c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(+c.dataset.modal); } });
+document.querySelectorAll('.step-item .step-more').forEach(b => {
+  b.addEventListener('click', () => openModal(+b.closest('.step-item').dataset.modal));
 });
 document.getElementById('m-close').addEventListener('click', closeModal);
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
