@@ -107,7 +107,7 @@ html:not(.motion) .loader { display: none; }
 .flow { position: relative; z-index: 10; background: var(--cream); }
 
 /* scatter gallery */
-.scatter { position: relative; height: 150vh; min-height: 900px; overflow: clip; }
+.scatter { position: relative; z-index: 6; height: 150vh; min-height: 900px; overflow: clip; }
 .scatter-title { position: sticky; top: 0; z-index: 4; height: 100svh; display: grid; place-items: center; text-align: center; pointer-events: none; padding: 0 var(--pad); }
 .scatter-title h2 { font: 400 clamp(34px, 4.4vw, 64px)/1.04 var(--serif); letter-spacing: -.015em; max-width: 12em; }
 .scatter-title p { margin-top: 18px; font: 400 16px/1.45 var(--sans); max-width: 30em; margin-inline: auto; opacity: .75; }
