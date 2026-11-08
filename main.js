@@ -84,7 +84,12 @@ function openModal(i) {
   h += `<button class="m-cta" type="button">${m.cta}</button>`;
   if (m.img) h += `<img class="m-img" src="${m.img}" alt="${m.title.replace(/<[^>]+>/g, '').replace(/"/g, '&quot;')}">`;
   mBody.innerHTML = h;
-  mBody.querySelector('.m-cta').onclick = () => { closeModal(); document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); };
+  mBody.querySelector('.m-cta').onclick = () => {
+    closeModal();
+    const target = document.getElementById('contact');
+    if (window.__lenis) { window.__lenis.start(); setTimeout(() => window.__lenis.scrollTo(target, { offset: -40, duration: 1.8 }), 80); }   // smooth scroll was paused while the popup was open
+    else target.scrollIntoView({ behavior: 'smooth' });
+  };
   modal.querySelector('.m-box').classList.toggle('m-wide', !!m.stages);
   lastFocus = document.activeElement;
   modal.hidden = false;
