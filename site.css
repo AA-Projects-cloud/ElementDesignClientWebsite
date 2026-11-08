@@ -680,3 +680,27 @@ html:not(.motion) .across-stage .photo { transform: scale(1.05); }
 .across-copy { right: auto; width: min(54%, 820px); flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 26px; }
 .across-copy > div { display: flex; flex-direction: column; align-items: flex-start; }
 @media (max-width: 760px) { .across-stage .photo { right: -16%; } .across-copy { width: calc(100% - 2 * var(--pad)); } }
+
+/* ======================================================================
+   Two-image showcase: slides 1 → 2, the second opens to full screen, then shrinks into the line of text below
+   ====================================================================== */
+.scatter { height: calc(100vh + 480vh); }
+.scatter-title { display: block; padding: 0; z-index: 4; }
+.scatter-title .sc-head { position: absolute; left: 0; right: 0; top: clamp(64px, 11vh, 120px); padding: 0 var(--pad); text-align: center; }
+.scatter-title h2 { font-size: clamp(26px, 3.2vw, 48px); margin-inline: auto; }
+.sc-field { position: absolute; left: 0; right: 0; top: 0; height: max(150vh, 900px); }
+.sc-card { position: absolute; left: 0; top: 0; z-index: 6; overflow: hidden; border-radius: 18px; background: #cfc6b3; box-shadow: 0 30px 80px rgba(42, 39, 37, .22); will-change: transform, width, height; width: 34vw; aspect-ratio: 16 / 10; left: 50%; top: 56%; transform: translate(-50%, -50%); }
+.sc-track { position: absolute; inset: 0; width: 200%; display: flex; will-change: transform; }
+.sc-slide { position: relative; flex: 0 0 50%; height: 100%; overflow: hidden; }
+.sc-slide i { position: absolute; inset: 0; background: center / cover no-repeat; will-change: transform; }
+.sc-arrows { position: absolute; left: 50%; bottom: 16px; z-index: 2; display: flex; gap: 8px; transform: translateX(-50%); pointer-events: none; }
+.sc-arrows button { pointer-events: auto; width: 30px; height: 30px; border-radius: 50%; border: 0; display: grid; place-items: center; cursor: pointer; background: rgba(244, 239, 227, .86); color: var(--ink); transition: transform .4s var(--ease), background .3s; }
+.sc-arrows button:hover { transform: scale(1.12); background: #fff; }
+.sc-arrows svg { width: 7px; height: 11px; fill: none; stroke: currentColor; stroke-width: 1.4; }
+@media (max-width: 760px) { .sc-card { width: 72vw; } }
+html:not(.motion) .scatter { height: auto; }
+html:not(.motion) .scatter-title .sc-head { position: static; padding-bottom: 20px; }
+html:not(.motion) .sc-card { position: relative; left: auto; top: auto; transform: none; width: 100%; }
+html:not(.motion) .sc-track { width: 100%; }
+html:not(.motion) .sc-slide:nth-child(2), html:not(.motion) .sc-arrows { display: none; }
+html:not(.motion) .sc-field { position: static; height: auto; display: grid; gap: 20px; }

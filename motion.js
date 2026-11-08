@@ -269,7 +269,7 @@
         gsap.to(el, { opacity: 1, scale: 1, duration: 1.5, ease: EXPO });
         gsap.to(el, { filter: CLEAR, duration: 2.2, ease: 'power2.out', clearProps: 'filter' });
       } });
-      gsap.fromTo(el, { y: () => sp * innerHeight * 1.5 }, { y: () => -sp * innerHeight * 1.5, ease: 'none', scrollTrigger: { trigger: '.scatter', start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true } });
+      gsap.fromTo(el, { y: () => sp * innerHeight * 1.5 }, { y: () => -sp * innerHeight * 1.5, ease: 'none', scrollTrigger: { trigger: '.sc-field', start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true } });
     });
 
     // statement: words light up as you read; the thumbnail opens up
@@ -280,7 +280,47 @@
       gsap.to(s.words, { opacity: 1, stagger: .12, ease: 'none', scrollTrigger: { trigger: sh, start: 'top 82%', end: 'bottom 48%', scrub: true } });
     }
     const thumb = $('.statement .thumb');
-    if (thumb) { gsap.set(thumb, { scaleX: 0, transformOrigin: 'left center' }); ST.create({ trigger: thumb, start: 'top 88%', once: true, onEnter: () => gsap.to(thumb, { scaleX: 1, duration: 1.4, ease: 'expo.inOut', delay: .1 }) }); }
+    // showcase: two images slide 1 → 2, the second opens to full screen, then shrinks onto the thumbnail inside the sentence below
+    const sc = $('.scatter'), card = $('.sc-card'), track = $('.sc-track'), field = $('.sc-field'), head = $('.sc-head');
+    if (sc && card && thumb) {
+      const slides = $$('.sc-slide i', card), arrows = $('.sc-arrows', card);
+      const clamp01 = v => Math.min(1, Math.max(0, v));
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const baseW = () => innerWidth < 760 ? innerWidth * .72 : innerWidth * .34;
+      const place = p => {
+        const vw = innerWidth, vh = innerHeight, bw = baseW(), bh = bw * .625, bcy = vh * .56;
+        const ex = ease(clamp01((p - .26) / .2)), sh = ease(clamp01((p - .56) / .34));
+        let w = lerp(bw, vw, ex), h = lerp(bh, vh, ex), cx = vw / 2, cy = lerp(bcy, vh / 2, ex), r = lerp(18, 0, ex);
+        if (sh > 0) {                                                                // minimise onto the thumbnail's live position
+          const t = thumb.getBoundingClientRect();
+          w = lerp(vw, t.width, sh); h = lerp(vh, t.height, sh);
+          cx = lerp(vw / 2, t.left + t.width / 2, sh); cy = lerp(vh / 2, Math.min(t.top + t.height / 2, vh - h / 2 - 16), sh);
+          r = lerp(0, (parseFloat(getComputedStyle(thumb).fontSize) || 40) * .14, sh);
+        }
+        gsap.set(card, { left: 0, top: 0, x: cx - w / 2, y: cy - h / 2, width: w, height: h, borderRadius: r, xPercent: 0, yPercent: 0 });
+        gsap.set(track, { xPercent: -50 * ease(clamp01(p / .18)) });
+        const zoom = 1 + .2 * ease(clamp01((p - .26) / .26)) - .2 * sh;              // zoom in while opening, relax while closing
+        gsap.set(slides[1], { scale: zoom });
+        gsap.set(slides[0], { scale: 1 + .04 * ease(clamp01(p / .18)) });
+        const fade = 1 - ease(clamp01((p - .24) / .14));
+        gsap.set([field, head], { opacity: fade, visibility: fade < .01 ? 'hidden' : 'visible' });
+        gsap.set(arrows, { opacity: 1 - ease(clamp01((p - .22) / .08)) });
+        const landed = p >= .985;
+        card.style.visibility = landed ? 'hidden' : 'visible';
+        thumb.style.opacity = landed ? '1' : '0';
+      };
+      gsap.set(thumb, { opacity: 0 });
+      // the sentence must already be on screen while the picture is still pinned, so pull it up under the stage
+      const overlap = () => { sc.style.marginBottom = '0px'; const rel = thumb.getBoundingClientRect().top - $('.statement').getBoundingClientRect().top; sc.style.marginBottom = -(innerHeight * .6 + rel) + 'px'; };
+      ST.addEventListener('refreshInit', overlap);
+      overlap();
+      ST.create({ trigger: sc, start: 'top top', end: 'bottom bottom', invalidateOnRefresh: true, onUpdate: s => place(s.progress), onRefresh: s => place(s.progress) });
+      place(0);
+      const goTo = f => { const d = sc.offsetHeight - innerHeight; lenis.scrollTo(sc.getBoundingClientRect().top + scrollY + d * f, { duration: 1.6 }); };
+      $('.sc-next', card).addEventListener('click', () => goTo(.2));
+      $('.sc-prev', card).addEventListener('click', () => goTo(0));
+    }
     const rule = $('.statement-rule');
     if (rule) { gsap.set(rule.children, { opacity: 0, y: 40 }); ST.create({ trigger: rule, start: 'top 90%', once: true, onEnter: () => gsap.to(rule.children, { opacity: 1, y: 0, duration: 1.1, ease: EXPO, stagger: .12, clearProps: 'transform,opacity' }) }); }
 
