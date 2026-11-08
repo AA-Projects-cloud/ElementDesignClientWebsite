@@ -465,7 +465,7 @@
       gsap.set(photo, { xPercent: 0, transformOrigin: '50% 55%' });
       gsap.fromTo(frame, { clipPath: 'inset(34% 5% 34% 5% round 22px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'power2.inOut', scrollTrigger: { trigger: ac, start: 'top 88%', end: 'top top', scrub: .7 } });
       gsap.fromTo(photo, { scale: 1.45, filter: HAZE }, { scale: 1.1, filter: CLEAR, ease: 'none', scrollTrigger: { trigger: ac, start: 'top 88%', end: 'top top', scrub: .7 } });
-      gsap.fromTo(photo, { scale: 1.1 }, { scale: 1.26, ease: 'none', immediateRender: false, scrollTrigger: { trigger: ac, start: 'top top', end: 'bottom bottom', scrub: true } });
+      gsap.fromTo(photo, { scale: 1.1 }, { scale: 1.26, ease: 'none', immediateRender: false, scrollTrigger: { trigger: ac, start: 'top top', end: 'bottom top', scrub: true } });
       gsap.set(pins, { opacity: 0 });
       ST.create({ trigger: ac, start: 'top 30%', once: true, onEnter: () => gsap.to(pins, { opacity: 1, duration: 1, stagger: .2 }) });
     }

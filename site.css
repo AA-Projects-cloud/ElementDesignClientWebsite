@@ -704,3 +704,6 @@ html:not(.motion) .sc-card { position: relative; left: auto; top: auto; transfor
 html:not(.motion) .sc-track { width: 100%; }
 html:not(.motion) .sc-slide:nth-child(2), html:not(.motion) .sc-arrows { display: none; }
 html:not(.motion) .sc-field { position: static; height: auto; display: grid; gap: 20px; }
+
+/* India section: no empty scroll space below the map (the section is exactly one screen tall) */
+.across { height: 100svh; }
