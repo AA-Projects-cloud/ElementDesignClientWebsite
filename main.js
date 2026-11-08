@@ -87,7 +87,8 @@ function openModal(i) {
   mBody.querySelector('.m-cta').onclick = () => {
     closeModal();
     const target = document.getElementById('contact');
-    if (window.__lenis) { window.__lenis.start(); setTimeout(() => window.__lenis.scrollTo(target, { offset: -40, duration: 1.8 }), 80); }   // smooth scroll was paused while the popup was open
+    if (window.__toContact) setTimeout(window.__toContact, 120);                     // loader-style transition to the form
+    else if (window.__lenis) { window.__lenis.start(); setTimeout(() => window.__lenis.scrollTo(target, { offset: -40, duration: 1.8 }), 80); }
     else target.scrollIntoView({ behavior: 'smooth' });
   };
   modal.querySelector('.m-box').classList.toggle('m-wide', !!m.stages);

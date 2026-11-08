@@ -601,6 +601,59 @@
     });
   }
 
+  /* ------------------------------------- "discuss your project": loader-style transition to the contact form */
+  let xferBusy = false;
+  function contactTransition() {
+    const target = document.getElementById('contact');
+    if (!target || xferBusy) return;
+    xferBusy = true;
+    lenis.stop();
+    const o = document.createElement('div');
+    o.className = 'loader xfer';
+    o.innerHTML = '<div class="ld-row"><div class="ld-name"><img src="logo.png" alt=""><span>ELEMENT DESIGN<sup>®</sup></span></div><b class="ld-count">0</b></div>';
+    document.body.appendChild(o);
+    const logo = $('img', o), cnt = $('.ld-count', o), nm = $('span', o);
+    gsap.set(o, { opacity: 0 });
+    gsap.set(logo, { transformPerspective: 700, scale: .8 });
+    const roll = gsap.to(logo, { rotationY: '+=360', duration: 1.1, ease: 'none', repeat: -1 });
+    const v = { p: 0 };
+    const jump = () => { lenis.start(); lenis.scrollTo(target, { immediate: true, offset: -40 }); lenis.stop(); };
+    const fly = () => {
+      const brandImg = $('#bar .brand img');
+      const done = () => { o.remove(); lenis.start(); xferBusy = false; };
+      if (!brandImg) { gsap.to(o, { opacity: 0, duration: .5, onComplete: done }); return; }
+      const t = brandImg.getBoundingClientRect(), c = logo.getBoundingClientRect();
+      const clone = logo.cloneNode(); clone.alt = '';
+      Object.assign(clone.style, { position: 'fixed', left: c.left + 'px', top: c.top + 'px', width: c.width + 'px', height: c.height + 'px', zIndex: 10001, pointerEvents: 'none', objectFit: 'contain', transform: 'none' });
+      document.body.appendChild(clone);
+      gsap.set(logo, { visibility: 'hidden' });
+      gsap.to(o, { yPercent: -100, duration: 1.1, ease: 'expo.inOut', onComplete: done });
+      gsap.to(clone, { x: (t.left + t.width / 2) - (c.left + c.width / 2), y: (t.top + t.height / 2) - (c.top + c.height / 2), scale: t.width / c.width, duration: 1, ease: 'expo.inOut', onComplete: () => clone.remove() });
+    };
+    const finish = () => {
+      const turn = Math.ceil(gsap.getProperty(logo, 'rotationY') / 360) * 360;
+      roll.kill();
+      jump();                                                                         // the form is already in place when the curtain lifts
+      gsap.timeline()
+        .to(logo, { rotationY: turn, duration: .7, ease: 'power3.out' }, 0)
+        .to([cnt, nm], { opacity: 0, duration: .4 }, .1)
+        .to(logo, { scale: 1.5, duration: .45, ease: 'power2.out' }, .35)
+        .add(fly, .85);
+    };
+    gsap.timeline()
+      .to(o, { opacity: 1, duration: .35, ease: 'power1.out' })
+      .to(logo, { scale: 1, duration: .6, ease: EXPO }, 0)
+      .to(v, { p: 100, duration: 1.5, ease: 'power2.inOut', onUpdate: () => { cnt.textContent = Math.round(v.p); }, onComplete: () => gsap.delayedCall(.15, finish) }, .2);
+  }
+  window.__toContact = contactTransition;
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('a[href="#contact"]');
+    if (!a || !document.getElementById('contact') || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+    e.preventDefault(); e.stopPropagation();
+    if (window.__setMenu) window.__setMenu(false);
+    contactTransition();
+  }, true);
+
   /* ---------------------------------------------------- interactions + extras */
   function interactions() {
     if (fine) $$('.pill, .circle-btn, .menu-btn').forEach(b => {
