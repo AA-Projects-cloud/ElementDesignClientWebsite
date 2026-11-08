@@ -262,6 +262,7 @@
     }
 
     // scattered projects: emerge from fog, then drift at different speeds
+    const parTweens = [];
     $$('.sc-img').forEach(el => {
       const sp = +el.dataset.sp || .1;
       gsap.set(el, { opacity: 0, scale: .84, filter: HAZE });
@@ -269,7 +270,7 @@
         gsap.to(el, { opacity: 1, scale: 1, duration: 1.5, ease: EXPO });
         gsap.to(el, { filter: CLEAR, duration: 2.2, ease: 'power2.out', clearProps: 'filter' });
       } });
-      gsap.fromTo(el, { y: () => sp * innerHeight * 1.5 }, { y: () => -sp * innerHeight * 1.5, ease: 'none', scrollTrigger: { trigger: '.sc-field', start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true } });
+      parTweens.push(gsap.fromTo(el, { y: () => sp * innerHeight * 1.5 }, { y: () => -sp * innerHeight * 1.5, ease: 'none', paused: true, immediateRender: true }));
     });
 
     // statement: words light up as you read; the thumbnail opens up
@@ -316,6 +317,20 @@
       ST.addEventListener('refreshInit', overlap);
       overlap();
       ST.create({ trigger: sc, start: 'top top', end: 'bottom bottom', invalidateOnRefresh: true, onUpdate: s => place(s.progress), onRefresh: s => place(s.progress) });
+      const showST = ST.getAll().find(t => t.trigger === sc && t.vars.onUpdate);
+      // the background photos drift with the page, but stand still while the card slides to image 2 and resume when it starts to zoom
+      ST.create({
+        trigger: field, start: 'top bottom', end: 'bottom top', invalidateOnRefresh: true,
+        onUpdate: self => parallax(self), onRefresh: self => parallax(self)
+      });
+      function parallax(self) {
+        const pos = self.scroll(), D = sc.offsetHeight - innerHeight, pause = D * .26;
+        const shift = Math.min(Math.max(pos - showST.start, 0), pause);               // distance scrolled while paused
+        const eff = pos - shift;
+        const prog = Math.min(1, Math.max(0, (eff - self.start) / (self.end - self.start)));
+        parTweens.forEach(t => t.progress(prog));
+        gsap.set(field, { y: shift });
+      }
       place(0);
       const goTo = f => { const d = sc.offsetHeight - innerHeight; lenis.scrollTo(sc.getBoundingClientRect().top + scrollY + d * f, { duration: 1.6 }); };
       $('.sc-next', card).addEventListener('click', () => goTo(.2));
