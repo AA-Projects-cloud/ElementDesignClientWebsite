@@ -541,8 +541,8 @@
   function runLoader() {
     return new Promise(resolve => {
       if (!loader) { resolve(); return; }
-      let seen = false;
-      try { seen = !!sessionStorage.getItem('ed-seen'); sessionStorage.setItem('ed-seen', '1'); } catch (e) { /* private mode */ }
+      // the full animation plays on every page load, including when moving between pages of the site
+      const seen = false;
       const name = $('.ld-name', loader), cnt = $('.ld-count', loader), bar = $('.ld-line i', loader), row = $('.ld-row', loader);
       // wait only for what the first screen needs (fonts + the hero video's first frame), never for the whole page
       const media = $('.hero video, .inner-hero .hero-bg');
@@ -562,16 +562,17 @@
         .to(logo, { opacity: 1, scale: 1, duration: .9, ease: EXPO })
         .to(s.chars, { yPercent: 0, duration: 1, ease: EXPO, stagger: .03 }, .1);
       // the logo rolls while the percentage counts up
-      const roll = gsap.to(logo, { rotation: '+=360', duration: 1.25, ease: 'none', repeat: -1 });
+      gsap.set(logo, { transformPerspective: 700 });
+      const roll = gsap.to(logo, { rotationY: '+=360', duration: 1.1, ease: 'none', repeat: -1 });
       const v = { p: 0 };
       const paint = () => { cnt.textContent = Math.round(v.p); };
 
       // at 100%: settle the roll, zoom in, then zoom out while flying to the logo in the top-left corner
       const finish = () => {
-        const turn = Math.ceil(gsap.getProperty(logo, 'rotation') / 360) * 360;
+        const turn = Math.ceil(gsap.getProperty(logo, 'rotationY') / 360) * 360;
         roll.kill();
         gsap.timeline()
-          .to(logo, { rotation: turn, duration: .7, ease: 'power3.out' }, 0)
+          .to(logo, { rotationY: turn, duration: .7, ease: 'power3.out' }, 0)
           .to([cnt, $('span', name)], { opacity: 0, duration: .4 }, .1)
           .to(logo, { scale: 1.5, duration: .45, ease: 'power2.out' }, .35)
           .add(() => fly(), .85);
