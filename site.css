@@ -673,3 +673,10 @@ html:not(.motion) .house { display: none; }
 #note.bad { color: #b3261e; }
 .cookie a { color: inherit; text-decoration: underline; }
 .notfound-links, .thanks-links { display: flex; flex-wrap: wrap; gap: 14px 34px; margin-top: 34px; }
+
+/* India section: text on the left, the map on the right, fading into the dark background (no visible picture edge) */
+.across-stage .photo { left: auto; right: clamp(20px, 5vw, 110px); -webkit-mask-image: radial-gradient(ellipse 52% 54% at 50% 50%, #000 38%, transparent 100%); mask-image: radial-gradient(ellipse 52% 54% at 50% 50%, #000 38%, transparent 100%); }
+html:not(.motion) .across-stage .photo { transform: scale(1.05); }
+.across-copy { right: auto; width: min(54%, 820px); flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 26px; }
+.across-copy > div { display: flex; flex-direction: column; align-items: flex-start; }
+@media (max-width: 760px) { .across-stage .photo { right: -16%; } .across-copy { width: calc(100% - 2 * var(--pad)); } }

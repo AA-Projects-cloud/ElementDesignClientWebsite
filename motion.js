@@ -407,7 +407,7 @@
     const ac = $('.across');
     if (ac) {
       const frame = $('.across-frame'), photo = $('.across .photo'), pins = $$('.across .pin');
-      gsap.set(photo, { xPercent: -50, transformOrigin: '50% 55%' });
+      gsap.set(photo, { xPercent: 0, transformOrigin: '50% 55%' });
       gsap.fromTo(frame, { clipPath: 'inset(34% 5% 34% 5% round 22px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'power2.inOut', scrollTrigger: { trigger: ac, start: 'top 88%', end: 'top top', scrub: .7 } });
       gsap.fromTo(photo, { scale: 1.45, filter: HAZE }, { scale: 1.1, filter: CLEAR, ease: 'none', scrollTrigger: { trigger: ac, start: 'top 88%', end: 'top top', scrub: .7 } });
       gsap.fromTo(photo, { scale: 1.1 }, { scale: 1.26, ease: 'none', immediateRender: false, scrollTrigger: { trigger: ac, start: 'top top', end: 'bottom bottom', scrub: true } });
