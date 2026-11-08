@@ -555,18 +555,47 @@
         return;
       }
       const s = splitText($('span', name), 'chars');
+      const logo = $('img', name), siteBar = $('#bar');
       gsap.set(s.chars, { yPercent: 118 });
-      gsap.set($('img', name), { opacity: 0, scale: .6 });
+      gsap.set(logo, { opacity: 0, scale: .6 });
       gsap.timeline()
-        .to($('img', name), { opacity: 1, scale: 1, duration: .9, ease: EXPO })
+        .to(logo, { opacity: 1, scale: 1, duration: .9, ease: EXPO })
         .to(s.chars, { yPercent: 0, duration: 1, ease: EXPO, stagger: .03 }, .1);
+      // the logo rolls while the percentage counts up
+      const roll = gsap.to(logo, { rotation: '+=360', duration: 1.25, ease: 'none', repeat: -1 });
       const v = { p: 0 };
-      const paint = () => { cnt.textContent = Math.round(v.p); gsap.set(bar, { scaleX: v.p / 100 }); };
+      const paint = () => { cnt.textContent = Math.round(v.p); };
+
+      // at 100%: settle the roll, zoom in, then zoom out while flying to the logo in the top-left corner
+      const finish = () => {
+        const turn = Math.ceil(gsap.getProperty(logo, 'rotation') / 360) * 360;
+        roll.kill();
+        gsap.timeline()
+          .to(logo, { rotation: turn, duration: .7, ease: 'power3.out' }, 0)
+          .to([cnt, $('span', name)], { opacity: 0, duration: .4 }, .1)
+          .to(logo, { scale: 1.5, duration: .45, ease: 'power2.out' }, .35)
+          .add(() => fly(), .85);
+      };
+      const fly = () => {
+        const brandImg = $('#bar .brand img');
+        if (!brandImg) { resolve(); lift(1.1); return; }
+        if (siteBar) gsap.set(siteBar, { y: 0 });                                  // measure the header at its resting place
+        const t = brandImg.getBoundingClientRect(), c = logo.getBoundingClientRect();
+        const clone = logo.cloneNode(); clone.removeAttribute('id'); clone.alt = '';
+        Object.assign(clone.style, { position: 'fixed', left: c.left + 'px', top: c.top + 'px', width: c.width + 'px', height: c.height + 'px', zIndex: 10001, pointerEvents: 'none', objectFit: 'contain', transform: 'none' });
+        document.body.appendChild(clone);
+        gsap.set(logo, { visibility: 'hidden' });
+        resolve();                                                                  // page intro starts while the logo flies
+        lift(1.1);
+        gsap.to(clone, {
+          x: (t.left + t.width / 2) - (c.left + c.width / 2), y: (t.top + t.height / 2) - (c.top + c.height / 2), scale: t.width / c.width,
+          duration: 1, ease: 'expo.inOut',
+          onComplete: () => { if (siteBar) gsap.set(siteBar, { opacity: 1, y: 0 }); clone.remove(); }
+        });
+      };
+
       gsap.to(v, { p: 88, duration: 1.7, ease: 'power2.inOut', onUpdate: paint, onComplete: () => {
-        ready.then(() => gsap.to(v, { p: 100, duration: .45, ease: 'power1.out', onUpdate: paint, onComplete: () => gsap.delayedCall(.25, () => {
-          gsap.to(row, { opacity: 0, duration: .4 });
-          resolve(); lift(1.1);
-        }) }));
+        ready.then(() => gsap.to(v, { p: 100, duration: .45, ease: 'power1.out', onUpdate: paint, onComplete: () => gsap.delayedCall(.25, finish) }));
       } });
     });
   }
