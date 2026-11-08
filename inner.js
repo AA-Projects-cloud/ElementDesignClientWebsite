@@ -1,4 +1,5 @@
 // Helpers shared by the inner pages (about, career, blog, portfolio, services ...)
+import { initForm } from './form.js';
 
 export const back = (href = 'index.html', label = 'Home') =>
   `<a class="back" href="${href}"><svg viewBox="0 0 6 10"><path d="M5 1L1 5l4 4"/></svg>${label}</a>`;
@@ -26,7 +27,7 @@ export const process = () => `
 export const contact = (title = 'TAKE A STEP INTO THE WORLD OF <em>ELEMENT DESIGN ®</em>') => `
   <section class="blk"><div class="wrap">
     <div class="contact" id="contact">
-      <div class="contact-img"></div>
+      <div class="contact-img" role="img" aria-label="An Element Design interior by the studio"></div>
       <div>
         <h2>${title}</h2>
         <p class="muted">A place where your ideas take shape in our studio's original designs. Leave your contact details and our manager will reach out to discuss your project.</p>
@@ -34,19 +35,16 @@ export const contact = (title = 'TAKE A STEP INTO THE WORLD OF <em>ELEMENT DESIG
           <p class="f-label">Fill out the form and our manager will contact you</p>
           <label class="f-field"><input name="name" placeholder="Your name" required autocomplete="name"></label>
           <div class="f-field f-phone"><span class="f-code">IN (+91)</span><input name="phone" type="tel" placeholder="98765 43210" required autocomplete="tel-national" inputmode="tel" pattern="[0-9 ]{10,12}"></div>
+          <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="cf-slot"></div>
           <button class="pill wide" type="submit">Request a manager's consultation</button>
-          <small id="note">By clicking the “Send” button, I accept the <a href="#">privacy policy</a> terms</small>
+          <small id="note">By clicking the “Send” button, I accept the <a href="privacy-policy.html">privacy policy</a> terms</small>
         </form>
       </div>
     </div></div></section>`;
 
 export function boot() {
-  const form = document.getElementById('form');
-  if (form) form.addEventListener('submit', e => {
-    e.preventDefault();
-    document.getElementById('note').textContent = 'Thank you — our manager will contact you shortly.';
-    e.target.reset();
-  });
+  initForm();
   document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
     const id = a.getAttribute('href');
     const t = id.length > 1 && document.querySelector(id);

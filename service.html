@@ -4,7 +4,26 @@
 <meta charset="utf-8">
 <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Services — Element Design</title>
+<title>Service — Element Design</title>
+<meta name="description" content="Architecture, interior design, BIM engineering, design supervision, construction management and procurement from Element Design.">
+<link rel="canonical" href="https://YOUR-DOMAIN.com/service.html">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta name="theme-color" content="#EDE6D6">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Element Design">
+<meta property="og:locale" content="en_IN">
+<meta property="og:title" content="Service — Element Design">
+<meta property="og:description" content="Architecture, interior design, BIM engineering, design supervision, construction management and procurement from Element Design.">
+<meta property="og:url" content="https://YOUR-DOMAIN.com/service.html">
+<meta property="og:image" content="https://YOUR-DOMAIN.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Element Design — premium architecture and interior design">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Service — Element Design">
+<meta name="twitter:description" content="Architecture, interior design, BIM engineering, design supervision, construction management and procurement from Element Design.">
+<meta name="twitter:image" content="https://YOUR-DOMAIN.com/og-image.jpg">
+<script type="module" src="analytics.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -12,7 +31,7 @@
 </head>
 <body class="inner">
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="ld-row"><div class="ld-name"><img src="logo.png" alt=""><span>ELEMENT DESIGN<sup>®</sup></span></div><b class="ld-count">0</b></div>
+  <div class="ld-row"><div class="ld-name"><img src="logo.png" alt="Element Design logo"><span>ELEMENT DESIGN<sup>®</sup></span></div><b class="ld-count">0</b></div>
   <div class="ld-line"><i></i></div>
 </div>
 <noscript><style>.loader{display:none}</style></noscript>
@@ -25,6 +44,7 @@
 <script type="module">
 import { hero, process, contact, boot } from './inner.js';
 import { SERVICES, SUBSERVICES } from './data.js';
+import { setSeo } from './seo.js';
 const slug = new URLSearchParams(location.search).get('s');
 const top = SERVICES.find(s => s.slug === slug);
 const sub = SUBSERVICES.find(s => s.slug === slug);
@@ -34,7 +54,7 @@ else {
   const title = top ? top.title : `${sub.name} by Element Design`;
   const lead = top ? top.lead : sub.text;
   const text = top ? top.text : parent.text;
-  document.title = (top ? top.name : sub.name) + ' — Element Design';
+  setSeo({ title: (top ? top.name : sub.name) + ' — Element Design', description: lead, image: parent.img, path: 'service.html?s=' + slug });
   const kids = top && top.children ? top.children.map(k => SUBSERVICES.find(s => s.slug === k)) : [];
   const siblings = sub ? SUBSERVICES.filter(s => s.parent === sub.parent && s !== sub) : [];
   document.getElementById('app').innerHTML = `
@@ -45,7 +65,7 @@ ${hero({ title, sub: lead, img: parent.img, pos: 'center 40%', cta: 'Discover po
     <p class="lead">${text}</p>
     <a class="pill" href="#contact" style="margin-top:28px">Discuss your project</a>
   </div>
-  <div class="img-r reveal d1" style="background-image:url('${parent.img}')"></div>
+  <div class="img-r reveal d1" role="img" aria-label="${parent.name} project by Element Design" style="background-image:url('${parent.img}')"></div>
 </div></section>
 ${kids.length ? `<section class="blk"><div class="wrap"><h2 class="reveal">TYPES OF <em>${top.name.toUpperCase()}</em></h2><div class="chips">${kids.map(k => `<a href="service.html?s=${k.slug}">${k.name}</a>`).join('')}</div></div></section>` : ''}
 ${siblings.length ? `<section class="blk"><div class="wrap"><h2 class="reveal">MORE <em>${parent.name.toUpperCase()}</em></h2><div class="chips">${[`<a href="service.html?s=${parent.slug}">${parent.name}</a>`, ...siblings.map(k => `<a href="service.html?s=${k.slug}">${k.name}</a>`)].join('')}</div></div></section>` : ''}

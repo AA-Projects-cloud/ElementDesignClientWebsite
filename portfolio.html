@@ -6,6 +6,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Portfolio — Element Design</title>
 <meta name="description" content="Selected architecture and interior projects by Element Design across India.">
+<link rel="canonical" href="https://YOUR-DOMAIN.com/portfolio.html">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta name="theme-color" content="#EDE6D6">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Element Design">
+<meta property="og:locale" content="en_IN">
+<meta property="og:title" content="Portfolio — Element Design">
+<meta property="og:description" content="Selected architecture and interior projects by Element Design across India.">
+<meta property="og:url" content="https://YOUR-DOMAIN.com/portfolio.html">
+<meta property="og:image" content="https://YOUR-DOMAIN.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Element Design — premium architecture and interior design">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Portfolio — Element Design">
+<meta name="twitter:description" content="Selected architecture and interior projects by Element Design across India.">
+<meta name="twitter:image" content="https://YOUR-DOMAIN.com/og-image.jpg">
+<script type="module" src="analytics.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -13,7 +31,7 @@
 </head>
 <body class="inner">
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="ld-row"><div class="ld-name"><img src="logo.png" alt=""><span>ELEMENT DESIGN<sup>®</sup></span></div><b class="ld-count">0</b></div>
+  <div class="ld-row"><div class="ld-name"><img src="logo.png" alt="Element Design logo"><span>ELEMENT DESIGN<sup>®</sup></span></div><b class="ld-count">0</b></div>
   <div class="ld-line"><i></i></div>
 </div>
 <noscript><style>.loader{display:none}</style></noscript>
@@ -26,15 +44,16 @@
 <script type="module">
 import { hero, contact, boot } from './inner.js';
 import { PROJECTS, PORTFOLIO_CATS } from './data.js';
+import { setSeo } from './seo.js';
 const c = new URLSearchParams(location.search).get('c') || 'all';
 const cat = PORTFOLIO_CATS.find(x => x.slug === c) || PORTFOLIO_CATS[0];
-document.title = (cat.slug === 'all' ? 'Portfolio' : cat.name) + ' — Element Design';
+setSeo({ title: (cat.slug === 'all' ? 'Portfolio' : cat.name + ' Portfolio') + ' — Element Design', description: cat.slug === 'all' ? 'Selected architecture and interior projects by Element Design across India.' : cat.name + ' projects by Element Design: selected work across India, each drawn around the people who live and work in it.', path: 'portfolio.html' + (cat.slug === 'all' ? '' : '?c=' + cat.slug) });
 const list = PROJECTS.filter(p => cat.slug === 'all' || p.cat === cat.slug);
 document.getElementById('app').innerHTML = `
 ${hero({ title: cat.slug === 'all' ? 'Portfolio' : cat.name, sub: 'Selected architecture and interior projects by Element Design across India. Each one is drawn around the people who live and work in it.', img: 'interiors.jpg', pos: 'center 50%', cta: 'Discuss your project' })}
 <section class="blk"><div class="wrap">
   <div class="cats">${PORTFOLIO_CATS.map(x => `<a class="${x.slug === cat.slug ? 'on' : ''}" href="portfolio.html${x.slug === 'all' ? '' : '?c=' + x.slug}">${x.name}</a>`).join('')}</div>
-  <div class="b-grid">${list.map((p, i) => `<div class="b-card p-card reveal ${i % 2 ? 'd1' : ''}"><div class="b-img" style="background-image:url('${p.img}');background-position:${p.pos}"><div class="pills"><span>${PORTFOLIO_CATS.find(x => x.slug === p.cat).name}</span></div></div><div class="b-row"><h3>${p.title}</h3></div><div class="b-date">${p.meta}</div></div>`).join('')}</div>
+  <div class="b-grid">${list.map((p, i) => `<div class="b-card p-card reveal ${i % 2 ? 'd1' : ''}"><div class="b-img" role="img" aria-label="${p.title}" style="background-image:url('${p.img}');background-position:${p.pos}"><div class="pills"><span>${PORTFOLIO_CATS.find(x => x.slug === p.cat).name}</span></div></div><div class="b-row"><h3>${p.title}</h3></div><div class="b-date">${p.meta}</div></div>`).join('')}</div>
 </div></section>
 ${contact()}`;
 boot();

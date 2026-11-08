@@ -19,3 +19,12 @@ Then open http://localhost:8080
 
 Import the repository in Vercel and deploy with the default settings (no `vercel.json` is needed):
 Framework preset **Other**, no build command, no output directory (the repository root is served as-is).
+
+## Go-live checklist (SEO, analytics, forms)
+
+1. **Domain** – `node tools/set-domain.mjs https://your-domain.com` updates canonical/share-preview URLs, `robots.txt` and rebuilds `sitemap.xml`. Re-run `node tools/build-sitemap.mjs` whenever pages or `data.js` change.
+2. **Google Search Console** – the verification file `googlefbae803ce8cfec64.html` is already in the site root; submit `https://your-domain.com/sitemap.xml`.
+3. **Google Analytics** – put the GA4 measurement ID in `config.js` (`GA_ID`). Link the GA4 property to Search Console in GA → Admin → Product links.
+4. **Spam protection** – create a Cloudflare Turnstile widget for your domain, put the *site key* in `config.js` and add `TURNSTILE_SECRET_KEY` in Vercel → Settings → Environment Variables.
+5. **Receiving enquiries by e-mail** – add `RESEND_API_KEY`, `CONTACT_TO`, `CONTACT_FROM` in Vercel (see `api/contact.js`).
+6. **HTTPS** – Vercel issues the certificate automatically; `vercel.json` adds the HSTS header and each page upgrades insecure requests.

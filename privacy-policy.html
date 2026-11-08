@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Element Design</title>
+<meta name="description" content="How Element Design collects, uses and protects the information you share through this website, including the contact form, cookies and analytics.">
+<link rel="canonical" href="https://YOUR-DOMAIN.com/privacy-policy.html">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta name="theme-color" content="#EDE6D6">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Element Design">
+<meta property="og:locale" content="en_IN">
+<meta property="og:title" content="Privacy Policy — Element Design">
+<meta property="og:description" content="How Element Design collects, uses and protects the information you share through this website, including the contact form, cookies and analytics.">
+<meta property="og:url" content="https://YOUR-DOMAIN.com/privacy-policy.html">
+<meta property="og:image" content="https://YOUR-DOMAIN.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Element Design — premium architecture and interior design">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Privacy Policy — Element Design">
+<meta name="twitter:description" content="How Element Design collects, uses and protects the information you share through this website, including the contact form, cookies and analytics.">
+<meta name="twitter:image" content="https://YOUR-DOMAIN.com/og-image.jpg">
+<script type="module" src="analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body class="inner">
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="ld-row"><div class="ld-name"><img src="logo.png" alt="Element Design logo"><span>ELEMENT DESIGN<sup>®</sup></span></div><b class="ld-count">0</b></div>
+  <div class="ld-line"><i></i></div>
+</div>
+<noscript><style>.loader{display:none}</style></noscript>
+
+<main><div id="app" class="page"></div></main>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module" src="common.js"></script>
+<script type="module">
+import { hero } from './inner.js';
+document.getElementById('app').innerHTML = `
+${hero({ title: 'Privacy Policy', sub: 'How Element Design handles the information you share with us. Last updated 8 November 2026.', img: 'meeting.jpg', pos: 'center 40%', backHref: 'index.html', backLabel: 'Home' })}
+<section class="blk"><div class="wrap"><article class="art legal">
+  <p>Element Design (“we”, “us”) is a studio for premium architecture and interior design based in Mumbai, India. This policy explains what information this website collects, why, and the choices you have. It is written to follow India’s Digital Personal Data Protection Act, 2023 and the Information Technology Act, 2000.</p>
+  <h2>Information we collect</h2>
+  <ul>
+    <li><b>Contact form:</b> your name and phone number, and the page you sent the form from, when you ask our manager to contact you.</li>
+    <li><b>Usage data:</b> pages viewed, approximate location, device and browser type, collected through Google Analytics with cookies.</li>
+    <li><b>Security data:</b> technical signals (such as IP address and browser details) processed by Cloudflare Turnstile to tell people from automated spam.</li>
+  </ul>
+  <h2>How we use it</h2>
+  <ul>
+    <li>To call you back about your project and prepare a tailored offer.</li>
+    <li>To keep the contact form free from spam and abuse.</li>
+    <li>To understand which pages are useful and improve the website.</li>
+  </ul>
+  <p>By pressing the send button on the contact form you give us consent to use your details for the first purpose. You can withdraw that consent at any time.</p>
+  <h2>Cookies</h2>
+  <p>This website uses cookies from Google Analytics to measure traffic, and Cloudflare may set a short-lived cookie for the spam check. You can block or delete cookies in your browser settings; the website keeps working, but some usage statistics will be lost.</p>
+  <h2>Who we share it with</h2>
+  <p>We do not sell your information. It is processed only by the service providers that run the website for us: Vercel (hosting), Cloudflare (spam protection), Google (analytics) and an e-mail delivery provider that forwards enquiries to our team. These providers may process data outside India under their own privacy terms.</p>
+  <h2>How long we keep it</h2>
+  <p>Contact details are kept only for as long as needed to respond to your enquiry and run the project that may follow, and are then deleted. Analytics data is kept according to Google Analytics retention settings.</p>
+  <h2>Your rights</h2>
+  <p>You may ask to access, correct or erase the personal data we hold about you, withdraw your consent, or raise a grievance. Send the request through the <a href="index.html#contact">contact form</a> or by message on our <a href="https://www.instagram.com/the_element_designs?rpxt=Y3h3NmVkMjdmZGI4" target="_blank" rel="noopener noreferrer">Instagram page</a> and we will respond within a reasonable time.</p>
+  <h2>Children</h2>
+  <p>This website is not directed at children, and we do not knowingly collect their personal data.</p>
+  <h2>Links to other websites</h2>
+  <p>Our blog links to external pages such as Instagram. Those sites have their own privacy practices that we do not control.</p>
+  <h2>Changes to this policy</h2>
+  <p>We may update this policy from time to time. The date at the top shows when it last changed. Continue exploring our <a href="services.html">services</a>, <a href="portfolio.html">portfolio</a> and <a href="about.html">studio story</a> at any time.</p>
+</article></div></section>`;
+</script>
+<script type="module" src="motion.js"></script>
+</body>
+</html>

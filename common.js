@@ -6,7 +6,7 @@ const onHome = here === 'index.html';
 const H = h => (h.startsWith('#') && !onHome ? 'index.html' + h : h);
 const esc = t => t.replace(/&/g, '&amp;');
 const IG = 'https://www.instagram.com/the_element_designs?rpxt=Y3h3NmVkMjdmZGI4';
-const BRAND = '<img src="logo.png" alt="">ELEMENT DESIGN<sup>®</sup>';
+const BRAND = '<img src="logo.png" alt="Element Design logo">ELEMENT DESIGN<sup>®</sup>';
 
 /* ---------- menu data ---------- */
 const S = (slug, label) => [label, `service.html?s=${slug}`];
@@ -79,13 +79,31 @@ if (!document.querySelector('footer.site-footer')) {
     <div class="foot-mid">
       <div><div class="foot-big">Element Design<sup>®</sup></div><p>Leading international bureau for premium architectural and interior design</p></div>
       <div class="foot-cols">
-        <div><span class="label">Explore</span><a href="about.html">About Us</a><a href="portfolio.html">Portfolio</a><a href="services.html">Services</a><a href="career.html">Career</a><a href="blog.html">Blog</a><a href="${H('#contact')}">Contacts</a></div>
+        <div><span class="label">Explore</span><a href="about.html">About Us</a><a href="portfolio.html">Portfolio</a><a href="services.html">Services</a><a href="career.html">Career</a><a href="blog.html">Blog</a><a href="${H('#faq')}">FAQ</a><a href="privacy-policy.html">Privacy Policy</a><a href="${H('#contact')}">Contacts</a></div>
         <div><span class="label">Follow</span><a href="${IG}" target="_blank" rel="noopener noreferrer">Instagram</a><span class="label" style="margin-top:22px">Studio</span><span class="t">Mumbai, India</span></div>
       </div>
     </div>
     <div class="foot-bot"><span><i class="dot"></i>© <span id="yr"></span> Element Design. All rights reserved.</span><button type="button" id="toTop">Back to top ↑</button></div>
   </div>`;
-  (document.querySelector('main') || document.body).appendChild(f);
+  const mainEl = document.querySelector('main') || document.body;
+  mainEl.appendChild(f);
+
+  /* ---------- related pages: plain internal links between the site's pages ---------- */
+  const REL = {
+    'about.html': [['Our architecture and interior design services', 'services.html'], ['Completed projects across India', 'portfolio.html'], ['News and press from the studio', 'blog.html'], ['Careers at Element Design', 'career.html']],
+    'career.html': [['About the Element Design studio', 'about.html'], ['What we design: services', 'services.html'], ['See our portfolio', 'portfolio.html'], ['Latest news from the blog', 'blog.html']],
+    'blog.html': [['About the studio and its founders', 'about.html'], ['Browse the portfolio', 'portfolio.html'], ['Explore our services', 'services.html'], ['Join the team', 'career.html']],
+    'article.html': [['About Element Design', 'about.html'], ['Browse the portfolio', 'portfolio.html'], ['Explore our services', 'services.html'], ['All blog posts', 'blog.html']],
+    'portfolio.html': [['Services behind these projects', 'services.html'], ['About the studio', 'about.html'], ['News and awards', 'blog.html'], ['Careers at Element Design', 'career.html']],
+    'services.html': [['See the finished projects', 'portfolio.html'], ['About the studio', 'about.html'], ['News and press', 'blog.html'], ['Frequently asked questions', 'index.html#faq']],
+    'service.html': [['All Element Design services', 'services.html'], ['See the finished projects', 'portfolio.html'], ['About the studio', 'about.html'], ['Frequently asked questions', 'index.html#faq']]
+  };
+  if (REL[here]) {
+    const rel = document.createElement('nav');
+    rel.className = 'related'; rel.setAttribute('aria-label', 'Related pages');
+    rel.innerHTML = '<span class="label">Explore more</span><ul>' + REL[here].map(r => `<li><a class="ulink" href="${r[1]}">${r[0]} <span>→</span></a></li>`).join('') + '</ul>';
+    mainEl.insertBefore(rel, f);
+  }
 }
 const yr = document.getElementById('yr'); if (yr) yr.textContent = new Date().getFullYear();
 document.getElementById('toTop')?.addEventListener('click', () => {
@@ -113,6 +131,6 @@ new MutationObserver(() => document.querySelectorAll('.ulink:not([data-hr]), .ca
 
 /* ---------- cookie ---------- */
 if (!document.getElementById('cookie')) {
-  document.body.insertAdjacentHTML('beforeend', '<div class="cookie" id="cookie">This website uses Cookies. <button id="accept">Accept</button></div>');
+  document.body.insertAdjacentHTML('beforeend', '<div class="cookie" id="cookie">This website uses Cookies. <a href="privacy-policy.html">Privacy policy</a> <button id="accept">Accept</button></div>');
   document.getElementById('accept').onclick = () => document.getElementById('cookie').classList.add('gone');
 }

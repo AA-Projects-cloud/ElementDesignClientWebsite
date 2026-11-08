@@ -4,7 +4,26 @@
 <meta charset="utf-8">
 <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion")</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blog — Element Design</title>
+<title>Article — Element Design</title>
+<meta name="description" content="News, press and insights from Element Design, a studio for premium architecture and interior design.">
+<link rel="canonical" href="https://YOUR-DOMAIN.com/article.html">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta name="theme-color" content="#EDE6D6">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Element Design">
+<meta property="og:locale" content="en_IN">
+<meta property="og:title" content="Article — Element Design">
+<meta property="og:description" content="News, press and insights from Element Design, a studio for premium architecture and interior design.">
+<meta property="og:url" content="https://YOUR-DOMAIN.com/article.html">
+<meta property="og:image" content="https://YOUR-DOMAIN.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Element Design — premium architecture and interior design">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Article — Element Design">
+<meta name="twitter:description" content="News, press and insights from Element Design, a studio for premium architecture and interior design.">
+<meta name="twitter:image" content="https://YOUR-DOMAIN.com/og-image.jpg">
+<script type="module" src="analytics.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -12,7 +31,7 @@
 </head>
 <body class="inner">
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="ld-row"><div class="ld-name"><img src="logo.png" alt=""><span>ELEMENT DESIGN<sup>®</sup></span></div><b class="ld-count">0</b></div>
+  <div class="ld-row"><div class="ld-name"><img src="logo.png" alt="Element Design logo"><span>ELEMENT DESIGN<sup>®</sup></span></div><b class="ld-count">0</b></div>
   <div class="ld-line"><i></i></div>
 </div>
 <noscript><style>.loader{display:none}</style></noscript>
@@ -25,11 +44,12 @@
 <script type="module">
 import { hero, contact, boot } from './inner.js';
 import { BLOG } from './data.js';
+import { setSeo } from './seo.js';
 const slug = new URLSearchParams(location.search).get('slug');
 const post = BLOG.find(b => b.slug === slug);
 if (!post) location.replace('blog.html');
 else {
-  document.title = post.title + ' — Element Design';
+  setSeo({ title: post.title + ' — Element Design', description: post.lead, image: post.img, path: 'article.html?slug=' + slug });
   const body = post.body.map(b => {
     if (b[0] === 'p') return `<p>${b[1]}</p>`;
     if (b[0] === 'h2') return `<h2>${b[1]}</h2>`;
@@ -46,7 +66,7 @@ ${hero({ title: post.title, sub: post.lead, img: post.img, pos: post.heroPos, ba
   ${body}
   <a class="src" href="${post.source}" target="_blank" rel="noopener noreferrer">View the original post on Instagram</a>
 </article>
-${others.length ? `<div class="more"><h2 class="reveal">MORE FROM <em>THE BLOG</em></h2><div class="b-grid">${others.map(b => `<a class="b-card reveal" href="article.html?slug=${b.slug}"><div class="b-img" style="background-image:url('${b.img}');background-position:${b.pos}"><div class="pills"><span>${b.read}</span><span>${b.theme}</span></div></div><div class="b-date">Published: ${b.date}</div><div class="b-row"><h3>${b.title}</h3><em>Read</em></div></a>`).join('')}</div></div>` : ''}
+${others.length ? `<div class="more"><h2 class="reveal">MORE FROM <em>THE BLOG</em></h2><div class="b-grid">${others.map(b => `<a class="b-card reveal" href="article.html?slug=${b.slug}"><div class="b-img" role="img" aria-label="${b.title}" style="background-image:url('${b.img}');background-position:${b.pos}"><div class="pills"><span>${b.read}</span><span>${b.theme}</span></div></div><div class="b-date">Published: ${b.date}</div><div class="b-row"><h3>${b.title}</h3><em>Read</em></div></a>`).join('')}</div></div>` : ''}
 </div></section>
 ${contact('TURN YOUR DREAMS OF THE PERFECT HOME INTO REALITY <em>WITH ELEMENT DESIGN ®</em>')}`;
   boot();

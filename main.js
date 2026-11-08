@@ -1,4 +1,5 @@
 /* Home page behaviour: count-ups, portfolio slider, service popups, contact form. */
+import { initForm } from './form.js';
 
 /* ---------- count-up numbers ---------- */
 const fmt = (n, f) => f === 'space' ? n.toLocaleString('en-US').replace(/,/g, ' ') : String(n);
@@ -21,11 +22,7 @@ const io = new IntersectionObserver(entries => {
 document.querySelectorAll('[data-count]').forEach(el => io.observe(el));
 
 /* ---------- contact form ---------- */
-document.getElementById('form')?.addEventListener('submit', e => {
-  e.preventDefault();
-  document.getElementById('note').textContent = 'Thank you — our manager will contact you shortly.';
-  e.target.reset();
-});
+initForm();
 
 /* ---------- service popups ---------- */
 const MODALS = [
@@ -85,7 +82,7 @@ function openModal(i) {
     if (t) h += `<p class="m-text">${t}</p>`;
   }
   h += `<button class="m-cta" type="button">${m.cta}</button>`;
-  if (m.img) h += `<img class="m-img" src="${m.img}" alt="">`;
+  if (m.img) h += `<img class="m-img" src="${m.img}" alt="${m.title.replace(/<[^>]+>/g, '').replace(/"/g, '&quot;')}">`;
   mBody.innerHTML = h;
   mBody.querySelector('.m-cta').onclick = () => { closeModal(); document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); };
   modal.querySelector('.m-box').classList.toggle('m-wide', !!m.stages);
