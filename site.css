@@ -716,3 +716,8 @@ html:not(.motion) .sc-field { position: static; height: auto; display: grid; gap
 .ld-count { font: 500 clamp(28px, 4vw, 44px)/1 var(--sans); letter-spacing: -.01em; min-width: 0; text-align: center; }
 .ld-count::after { content: "%"; margin-left: 2px; opacity: .7; font-size: .6em; }
 .ld-line { display: none; }
+
+/* menu: every item on one straight right-aligned line (buttons were shrink-wrapped and drifted) */
+.site-menu .mi, .site-menu .si { width: 100%; text-align: right; }
+.site-menu ul { align-items: stretch; }
+.g:not(.open) > .sub-wrap > .sub { padding-top: 0 !important; padding-bottom: 0 !important; }
